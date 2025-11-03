@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+.header-3{
+   font-family: 'Rajdhani', sans-serif!important;
+}
+.header-3 {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
+}
+
+/* Top Bar */
+.header-3-top-bar {
+  background: #1b1b1b;
+  padding: 14px 0;
+  font-size: 13px;
+  color: #fff;
+}
+
+.header-3-bar-list {
+  margin: 0;
+}
+
+.header-3-bar-list i {
+  margin-right: 4px;
+}
+
+/* Logo and Navigation Holder */
+.header-3-holder {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 12px 0;
+}
+
+.header-3-logo img {
+  max-height: 46px;
+}
+
+.header-3-navbar {
+  background: transparent;
+  border: none;
+  margin: 0;
+}
+
+.header-3-menu > li > a {
+  color: #fff!important;
+   font-family: 'Rajdhani', sans-serif!important;
+  font: 14px!important;
+  padding: 10px 15px;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.header-3-menu > li.active > a,
+.header-3-menu > li > a:hover,
+.header-3-menu > li > a:focus {
+  color: #eab308!important;
+}
+
+/* Underline Hover */
+.header-3-menu > li > a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: #eab308;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.header-3-menu > li > a:hover::before,
+.header-3-menu > li.active > a::before {
+  transform: scaleX(1);
+}
+
+/* Quote Button */
+.header-3-btn-quote {
+  background: #eab308;
+  border: none;
+  color: #fff !important;
+  padding: 9px 20px;
+  margin-left: 8px;
+}
+
+.header-3-btn-quote:hover {
+  background: #d99a00;
+}
+
+/* Search Icon */
+.header-3-search-li a {
+  padding: 10px 10px 10px 5px;
+}
+
+/* ===============================
+   HERO SECTION
+   =============================== */
+.header-3-hero {
+    margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 640px;
+  background: center/cover no-repeat;
+  color: #fff;
+  display: flex;
+  align-items: flex-start;
+   font-family: 'Rajdhani', sans-serif!important;
+
+}
+
+.header-3-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+}
+
+.header-3-hero-content {
+  position: relative;
+  z-index: 2;
+padding: 175px 80px 100px 80px;
+}
+
+.header-3-hero-title {
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  color:#fff;
+  font-family: 'Rajdhani', sans-serif!important;
+
+}
+
+.header-3-highlight {
+  color: #eab308;
+}
+
+.header-3-hero-sub {
+  font-size: 15px;
+  margin-bottom: 35px;
+}
+
+.header-3-btn-primary {
+  background: #eab308;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+}
+
+.header-3-btn-primary:hover {
+  background: #d99a00;
+  transform: translateY(-3px);
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 767px) {
+  .header-3-bar-list {
+    text-align: center;
+  }
+
+  .header-3-hero-content {
+    padding-top: 220px;
+  }
+
+  .header-3-hero-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-3-bar-list {
+    font-size: 10px;
+  }
+
+  .header-3-hero-sub {
+    font-size: 13px;
+  }
+}
+
+  ───────────────────────────────────────────── */
+.header-3.header-3--sticky {
+  position: fixed;        /* take header out of normal flow */
+  top: 0; left: 0; width: 100%;
+  background: #fff;       /* solid white */
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  z-index: 1000;
+  transition: background .3s ease, box-shadow .3s ease;
+}
+
+/* hide the black top‑bar once we’re sticky */
+.header-3.header-3--sticky .header-3-top-bar {
+  display: none;
+}
+
+.header-3.header-3--sticky .header-3-holder {
+  background: transparent;
+}
+
+.header-3.header-3--sticky .header-3-menu   > li > a,
+.header-3.header-3--sticky .header-3-search-li a,
+.header-3.header-3--sticky .header-3-bar-list,
+.header-3.header-3--sticky .ri-phone-line,
+.header-3.header-3--sticky .ri-map-pin-line,
+.header-3.header-3--sticky .ri-mail-line {
+  color: #000 ;
+}
+
+
+.header-3.header-3--sticky .header-3-menu > li > a::before {
+  background:#eab308;
+}
+
+.header-3.header-3--sticky .header-3-btn-quote {
+  background:#eab308;
+  color:#fff !important;
+}
+
+  .header-3 #nav .navbar-collapse {
+  z-index: 999;
+}
