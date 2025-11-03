@@ -1,0 +1,192 @@
+.header-20 {
+      position: absolute !important;
+      top: 0; left: 0; width: 100%;
+      z-index: 1000;
+      background: transparent;
+
+  font-family:'Quicksand', sans-serif!important;
+
+    }
+
+    /* --- top bar --- */
+    .header-20-top-bar {
+      background: #fff6;;
+      padding: 14px 0;
+      font-size: 13px;
+      color: var(--light);
+    }
+    .header-20-bar-list { margin: 0; }
+    .header-20-bar-list i { margin-right: 4px; }
+
+    /* --- logo + nav holder --- */
+    .header-20-holder {
+      padding: 12px 0;
+    }
+    .header-20-logo img { max-height: 60px; }
+
+    .header-20-navbar { background: transparent; border: none; margin: 0; }
+.header-20 .navbar-default .navbar-nav > li > a {
+    color: #fff !important;
+}
+    .header-20-menu > li > a {
+      color: #fff !important;
+      font-size: 16px!important;
+      padding: 10px 10px!important;
+      font-weight: bold!important;
+      position: relative;
+      transition: color .3s ease, transform .3s ease;
+      line-height: 4.154!important;
+    }
+    .header-20-menu > li.active > a,
+    .header-20-menu > li > a:hover { color: #3ee1ca !important; }
+
+    /* underline hover */
+    .header-20-menu > li > a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+       bottom: -4px;
+      width: 100%;
+      height: 10px;
+      background: #3ee1ca;
+      transform: scaleX(0);
+      transition: transform .3s ease;
+    }
+    .header-20-menu > li > a:hover::before,
+    .header-20-menu > li.active > a::before { transform: scaleX(1); }
+
+    /* CTA button */
+    .header-20-btn-quote {
+      background: #3ee1ca;
+      border: none;
+      color: var(--light) !important;
+      font-weight: 600;
+      padding: 9px 20px;
+      margin-left: 8px;
+    }
+    .header-20-btn-quote:hover { background: darken(#3ee1ca,10%); }
+
+    /* search icon */
+    .header-20-search-li a { padding: 10px 10px 10px 5px; }
+  .header-20 #nav .navbar-collapse {
+  z-index: 999;
+}
+    /* ===============================
+       HERO SECTION
+       =============================== */
+    .header-20-hero {
+      min-height: 640px;
+      position: relative;
+      color: var(--light);
+      display: flex;
+      align-items: flex-start;
+      background: center/cover no-repeat;
+    }
+    .header-20-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0,0,0,.75) 100%);
+
+    }
+    .header-20-hero-content {
+      position: relative; z-index: 2;
+      padding: 180px 80px 100px;
+    }
+    .header-20-hero-title {
+      font-weight: 700;
+      font-size: 58px;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 25px;
+    }
+    .header-20-highlight { color: #3ee1ca; }
+    .header-20-hero-sub { font-size: 16px; max-width: 580px; margin-bottom: 35px; color:#fff}
+
+    .header-20-btn-primary {
+      background: #3ee1ca;
+      border: none;
+      color: var(--light);
+      font-weight: 600;
+      padding: 12px 28px;
+            color: #fff;
+      transition: transform .3s ease;
+    }
+    .header-20-btn-primary:hover { transform: translateY(-3px); }
+
+    /* ===============================
+       STICKY STATE
+       =============================== */
+    .header-20.header-20--sticky {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      background: var(--light);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      transition: background .3s ease, box-shadow .3s ease;
+    }
+    .header-20.header-20--sticky .header-20-top-bar { display: none; }
+    .header-20.header-20--sticky .header-20-holder { background: #fff;}
+    .header-20.header-20--sticky .header-20-menu > li > a,
+    .header-20.header-20--sticky .header-20-search-li a { color: #000 !important; }
+    .header-20.header-20--sticky .header-20-menu > li > a::before { background: #3ee1ca; }
+    .header-20.header-20--sticky .header-20-btn-quote {
+      background: #3ee1ca; color: var(--light) !important;
+    }
+
+    /* ----------------------
+       RESPONSIVE
+       ---------------------- */
+    @media (max-width: 767px) {
+      .header-20-bar-list { text-align: center; }
+      .header-20-hero-content { padding-top: 230px; }
+      .header-20-hero-title { font-size: 34px; }
+    }
+    @media (max-width: 480px) {
+      .header-20-bar-list { font-size: 10px; }
+      .header-20-hero-sub { font-size: 13px; }
+    }
+@media (max-width: 768px) {
+   .header-20 .main-navigation.navbar-right > li > a {
+        background-color: #222222;
+    }
+}
+    .custom-hero-section {
+  position: relative;
+  min-height: 640px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.custom-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0));
+  z-index: 1;
+}
+
+.custom-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px 30px;
+}
+
+.custom-hero-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.custom-hero-title span {
+  color: #d1d1d1;
+  font-weight: 400;
+}
+
+.custom-hero-subtitle {
+  font-size: 16px;
+  max-width: 480px;
+  color: #f0f0f0;
+  line-height: 1.6;
+}
