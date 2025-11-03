@@ -1,0 +1,23 @@
+.header-6{
+ font-family: 'roboto'!important;
+}
+
+.header-6 .top-bar-holder{
+background: linear-gradient(90deg, #384DF4ff, #4E54F3ff, #645CF3ff, #7A63F2ff, #8F6AF1ff, #A572F1ff, #BB79F0ff)!important;
+}
+
+.header-6 .dropdown-menu > li > a:hover {
+  background-color: #384DF4ff;
+}
+.header-6 .bar-links > li > a{
+  border: none!important;
+}
+
+ .header-6  #nav {
+    position: relative;
+    padding-top: 24px!important;
+  }
+
+    .header-6 #nav .navbar-collapse {
+  z-index: 999;
+}
