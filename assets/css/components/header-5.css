@@ -1,0 +1,142 @@
+.header-5{
+   font-family: 'Rajdhani', sans-serif!important;
+}
+.header-5 {
+      position: absolute !important;
+      top: 0; left: 0; width: 100%;
+      z-index: 1000;
+      background: transparent;
+    }
+
+    /* --- top bar --- */
+    .header-5-top-bar {
+      background: #fff6;;
+      padding: 14px 0;
+      font-size: 13px;
+      color: var(--light);
+    }
+    .header-5-bar-list { margin: 0; }
+    .header-5-bar-list i { margin-right: 4px; }
+
+    /* --- logo + nav holder --- */
+    .header-5-holder {
+      background: rgba(0,0,0,0.05);
+      padding: 12px 0;
+    }
+    .header-5-logo img { max-height: 50px; }
+
+    .header-5-navbar { background: transparent; border: none; margin: 0; }
+
+    .header-5-menu > li > a {
+      color: var(--light) !important;
+      font-size: 14px;
+      padding: 10px 15px;
+      position: relative;
+      transition: color .3s ease, transform .3s ease;
+    }
+    .header-5-menu > li.active > a,
+    .header-5-menu > li > a:hover { color: #a7e13e !important; }
+
+    /* underline hover */
+    .header-5-menu > li > a::before {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 100%; height: 2px;
+      background: #a7e13e;
+      transform: scaleX(0);
+      transition: transform .3s ease;
+    }
+    .header-5-menu > li > a:hover::before,
+    .header-5-menu > li.active > a::before { transform: scaleX(1); }
+
+    /* CTA button */
+    .header-5-btn-quote {
+      background: #a7e13e;
+      border: none;
+      color: var(--light) !important;
+      font-weight: 600;
+      padding: 9px 20px;
+      margin-left: 8px;
+    }
+    .header-5-btn-quote:hover { background: darken(#a7e13e,10%); }
+
+    /* search icon */
+    .header-5-search-li a { padding: 10px 10px 10px 5px; }
+
+    /* ===============================
+       HERO SECTION
+       =============================== */
+    .header-5-hero {
+      min-height: 640px;
+      position: relative;
+      color: var(--light);
+      display: flex;
+      align-items: flex-start;
+      background: center/cover no-repeat;
+    }
+    .header-5-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0,0,0,.75) 100%);
+
+    }
+    .header-5-hero-content {
+      position: relative; z-index: 2;
+      padding: 180px 80px 100px;
+    }
+    .header-5-hero-title {
+      font-weight: 700;
+      font-size: 58px;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 25px;
+    }
+    .header-5-highlight { color: #a7e13e; }
+    .header-5-hero-sub { font-size: 16px; max-width: 580px; margin-bottom: 35px; color:#fff}
+
+    .header-5-btn-primary {
+      background: #a7e13e;
+      border: none;
+      color: var(--light);
+      font-weight: 600;
+      padding: 12px 28px;
+            color: #fff;
+      transition: transform .3s ease;
+    }
+    .header-5-btn-primary:hover { transform: translateY(-3px); }
+
+    /* ===============================
+       STICKY STATE
+       =============================== */
+    .header-5.header-5--sticky {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      background: var(--light);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      transition: background .3s ease, box-shadow .3s ease;
+    }
+    .header-5.header-5--sticky .header-5-top-bar { display: none; }
+    .header-5.header-5--sticky .header-5-holder { background: transparent; }
+    .header-5.header-5--sticky .header-5-menu > li > a,
+    .header-5.header-5--sticky .header-5-search-li a { color: #000 !important; }
+    .header-5.header-5--sticky .header-5-menu > li > a::before { background: #a7e13e; }
+    .header-5.header-5--sticky .header-5-btn-quote {
+      background: #a7e13e; color: var(--light) !important;
+    }
+
+    /* ----------------------
+       RESPONSIVE
+       ---------------------- */
+    @media (max-width: 767px) {
+      .header-5-bar-list { text-align: center; }
+      .header-5-hero-content { padding-top: 230px; }
+      .header-5-hero-title { font-size: 34px; }
+    }
+    @media (max-width: 480px) {
+      .header-5-bar-list { font-size: 10px; }
+      .header-5-hero-sub { font-size: 13px; }
+    }
+
+      .header-5 #nav .navbar-collapse {
+  z-index: 999;
+}
