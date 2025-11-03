@@ -1,0 +1,299 @@
+.header-37 {
+  font-family: 'Quicksand'!important;
+    }
+
+.editableSection .header-38{
+    position: fixed!important;
+}
+
+    header.header-38 {
+      /* position: fixed; */
+            position: relative;
+
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    header.header-38.sticky-active .st-top-header{
+      background: #8bc34a  !important;
+    }
+    header.header-38.sticky-active {
+      background: #fff !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Top Bar */
+    .header-38 .st-top-header {
+      padding: 5px 9px;
+      background: #8e8e8e30  !important;
+      border: none;
+    }
+
+    .header-38 .st-top-header-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-38 .st-top-header-list li {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-right: 35px;
+    }
+.header-38.sticky-active .st-top-header-list li a {
+      color: #fff;
+    }
+    .header-38 .st-top-header-list li a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .header-38 .st-top-header-list svg {
+      width: 18px;
+      margin-right: 10px;
+      fill: var(--secondary-color);
+    }
+
+    /* Logo & Nav */
+    .header-38 .header-holder {
+      background: transparent !important;
+    }
+
+    .header-38 .logo img {
+      max-height: 50px;
+    }
+
+    .header-38 .main-navigation.navbar-right > li > a {
+      font-weight: 800;
+      font-size: 13px;
+      color: #000;
+      font-family: 'Quicksand';
+    }
+
+    .header-38.sticky-active .main-navigation.navbar-right > li > a {
+      color: #111 !important;
+    }
+.header-38 .main-navigation.navbar-right > li > a:hover{
+background-color: transparent !important;
+border-bottom: 2px solid rgb(152, 206, 51);
+}
+    .header-38 .main-navigation.navbar-right > li {
+      margin-left: 16px;
+      padding: 5px 15px;
+      border-radius: 20px;
+    }
+
+    /* Mobile nav style */
+    @media (max-width: 768px) {
+          header.header-38 {
+      background:#fff;
+    }
+
+      .header-38 .navbar-collapse {
+        background: #fff!important;
+        width: 100%!important;
+        min-width: 100vw!important;
+        text-align: center!important;
+      }
+
+      .header-38 .navbar-collapse ul li a {
+        color: #000000 !important;
+        padding: 10px;
+        display: block;
+      }
+      .header-38 .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #eee!important;
+}
+      .header-38 .navbar-nav {
+  margin: 12px 0px;
+}
+header.header-38 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  background-color: #e0e6de!important;
+  border-radius: 12px;
+}
+      .header-38 .navbar-toggle {
+        border: none;
+        background: transparent;
+      }
+
+      .header-38 .icon-bar {
+        background-color: #fff;
+      }
+
+      .header-38.sticky-active .icon-bar {
+        background-color: #111;
+      }
+
+      .header-38 .st-top-header-list {
+        justify-content: space-between;
+      }
+
+      .header-38 .st-top-header-list li {
+        font-size: 10px;
+        margin-right: 15px;
+      }
+
+
+  .header-38 #nav {
+    padding-top: 6px;
+    padding-bottom: 8px;
+
+  }
+    }
+  .header-38 #nav .navbar-collapse {
+  z-index: 999;
+}
+
+.website-builder .header-38-section-wrapper{
+  position: unset!important;
+}
+.header-38-section {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header-38-section-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Base text styles */
+.header-38-section-text {
+  font-size: 10vw;
+  font-weight: bold;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+
+  /* Yellow border always visible */
+  -webkit-text-stroke: 3px yellow;
+  text-stroke: 3px yellow;
+}
+
+/* Transparent mask text */
+.header-38-section-text--mask {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Overlay text (black on white curtain) */
+.header-38-section-text--overlay {
+  color: black;
+  mix-blend-mode: difference;
+}
+
+/* Curtain (yellow overlay) */
+.header-38-section-curtain {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;   /* half covered initially */
+  height: 100%;
+  background: #ffcb00bd;
+  z-index: 1;
+}
+
+
+    .header-38-pagename {
+        padding: 120px 20px;
+        position: relative;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        display: none;
+    }
+
+    /* Overlay */
+    .header-38-pagename::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .header-38-pagename .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Title */
+    .header-38-pagename-title {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    /* Breadcrumb */
+    .header-38-pagename-breadcrumb {
+        font-size: 16px;
+        color: #f2f2f2;
+    }
+
+    .header-38-pagename-breadcrumb a {
+        color: #ff3c3c;
+        text-decoration: none;
+    }
+
+    .header-38-pagename-breadcrumb span {
+        color: #fff;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 991px) {
+        .header-38-pagename-title {
+            font-size: 36px;
+        }
+        .header-38-pagename-breadcrumb {
+            font-size: 15px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .header-38-pagename {
+            padding: 80px 15px;
+        }
+        .header-38-pagename-title {
+            font-size: 28px;
+        }
+        .header-38-pagename-breadcrumb {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-38-pagename {
+            padding: 60px 10px;
+        }
+        .header-38-pagename-title {
+            font-size: 22px;
+        }
+        .header-38-pagename-breadcrumb {
+            font-size: 13px;
+        }
+    }
+
