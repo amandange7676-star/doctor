@@ -1,0 +1,3 @@
+.bg-theme, .btn-theme, .user-links, .features-aside .col, .counter-aside .countdown::after, .block-header::after, .seperator-head::before, .news-post:hover::after, .newsletter-sub-form .icn.bg-theme, .widget > h3::after, .widget > .h3::after, .listDefault > li::before, .sep-heading::after, .contact-form h3::after, .contact-form .h3::after, .price-list::before, .price-list:hover .icn-wrap, .partner-block .partner-list li a::before, .price-box-column:hover .icn-wrap, .price-box-column.active .icn-wrap, .price-box-column::before {
+    background-color:var(--secondary-color);
+  }
