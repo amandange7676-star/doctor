@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600&display=swap');
+.header-19{
+font-family: 'Bebas Neue', sans-serif!important;
+}
+.header-23 {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
+}
+
+/* Top Bar */
+.header-23-top-bar {
+  background: #1b1b1b3d;
+  padding: 14px 0;
+  font-size: 13px;
+  color: #fff;
+}
+
+.header-23-bar-list {
+  margin: 0;
+}
+
+.header-23-bar-list i {
+  margin-right: 4px;
+}
+
+/* Logo and Navigation Holder */
+.header-23-holder {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 12px 0;
+}
+
+.header-23-logo img {
+  max-height: 46px;
+  padding-left: 49px;
+}
+
+.header-23-navbar {
+  background: transparent;
+  border: none;
+  margin: 0;
+
+}
+
+.header-23-menu > li > a {
+  color: #fff!important;
+font-family: 'Bebas Neue', sans-serif!important;
+  font: 15px!important;
+    letter-spacing: 0.2px;
+  padding: 10px 15px;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.header-23 li a{
+  font-family: 'Bebas Neue', sans-serif !important;
+}
+
+
+
+.header-23-menu > li.active > a,
+.header-23-menu > li > a:hover,
+.header-23-menu > li > a:focus {
+  color: #ef4444!important;
+}
+
+
+
+.header-23-menu > li > a:hover::before,
+.header-23-menu > li.active > a::before {
+  transform: scaleX(1);
+}
+
+/* Quote Button */
+.header-23-btn-quote {
+  background: #ef4444;
+  border: none;
+  color: #fff !important;
+  padding: 9px 20px;
+  margin-left: 8px;
+}
+
+.header-23-btn-quote:hover {
+  background: #d99a00;
+}
+
+/* Search Icon */
+.header-23-search-li a {
+  padding: 10px 10px 10px 5px;
+}
+
+  .header-23 #nav .navbar-collapse {
+  z-index: 999;
+}
+
+/* ===============================
+   HERO SECTION
+   =============================== */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+
+.header-23-hero {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 640px;
+  background: center/cover no-repeat;
+  color: #f4f4f4;
+  display: flex;
+  align-items: flex-start;
+  font-family: 'Bebas Neue', sans-serif !important;
+  background-color: #111827; /* fallback background */
+}
+
+.header-23-hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* darker overlay */
+}
+
+.header-23-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 175px 80px 100px 80px;
+}
+
+.header-23-hero-title {
+  font-weight: 800;
+  font-size: 78px;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-family: 'Bebas Neue', sans-serif!important;
+  letter-spacing: 15px;
+}
+
+
+
+.header-23-highlight {
+  color: #ef4444; /* red-500 */
+}
+
+.header-23-hero-sub {
+  font-size: 18px;
+  margin-bottom: 35px;
+  max-width: 540px;
+  color: #e5e7eb;
+}
+
+.header-23-btn-primary {
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+border-radius: 54px;
+letter-spacing: 5.3px;
+}
+
+.header-23-btn-primary:hover {
+  background: #dc2626;
+  transform: translateY(-3px);
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 767px) {
+  .header-23-hero-content {
+    padding: 140px 30px 60px 30px;
+  }
+
+  .header-23-hero-title {
+    font-size: 38px;
+  }
+
+  .header-23-hero-sub {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-23-hero-title {
+    font-size: 30px;
+  }
+
+  .header-23-hero-sub {
+    font-size: 13px;
+  }
+}
