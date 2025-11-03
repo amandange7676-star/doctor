@@ -1,0 +1,88 @@
+.footer-10 {
+  background: #000;
+  color: #fff;
+  padding: 60px 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.footer-10-heading {
+font-size: 66px;
+  font-weight: 700;
+  margin-bottom: 42px;
+  line-height: 71px;
+  text-align: left;
+  color: #fff;
+}
+
+.footer-10-highlight {
+  background: linear-gradient(90deg, #b16cea, #ff5e69, #ff8a56, #ffa84b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.footer-10-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #b16cea, #ff5e69, #ff8a56, #ffa84b);
+  transition: width 0.4s ease;
+}
+
+.footer-10-highlight:hover::after {
+  width: 100%;
+}
+
+.footer-10-logo {
+  font-size: 44px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.footer-10-logo span {
+  color: #ff5e69;
+}
+
+.footer-10-address,
+.footer-10-email {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #aaa;
+}
+
+.footer-10-email i {
+  margin-right: 6px;
+  color: #666;
+}
+
+.footer-10-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.footer-10-links li {
+  margin-bottom: 6px;
+}
+
+.footer-10-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.footer-10-links a:hover {
+  color: #ff5e69;
+}
+
+.footer-10-copy {
+  margin-top: 40px;
+  font-size: 13px;
+  color: #888;
+}
