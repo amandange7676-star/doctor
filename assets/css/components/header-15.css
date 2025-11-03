@@ -1,0 +1,121 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/lobster/v30/neILzCirqoswsqX9_oWsMqEzSJQ.woff2') format('woff2');
+}
+.header-15{
+        font-family: 'Lato', sans-serif!important;
+}
+.header-15-header-section {
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+}
+
+.header-15-navbar {
+  background-color: transparent;
+  border: none;
+  margin-bottom: 0;
+}
+
+.header-15-navbar .navbar-nav > li > a {
+    color: #fff !important;
+    font-weight: 400;
+}
+
+.header-15-navbar .navbar-nav > .dropdown > a .caret {
+    border-top-color: #fff;
+}
+
+.header-15-navbar .navbar-nav > .dropdown-menu {
+    background-color: #fff;
+    min-width: 200px;
+}
+.header-15-header-section .navbar-collapse{
+    padding: 25px;
+}
+.header-15-navbar .navbar-nav > .dropdown-menu > li > a {
+    color: #333;
+    padding: 20px 20px;
+}
+
+.header-15-navbar .navbar-nav > .dropdown-menu > li:hover > a,
+.header-15-navbar .navbar-nav > .dropdown-menu > li > a:hover {
+    background-color: #5d83c5;
+    color: #fff;
+}
+
+.header-15-navbar-brand img {
+    height: 60px;
+}
+
+.header-15-hero-text {
+position: absolute;
+  top: 50%;
+  left: 33%;
+  transform: translate(-50%, -50%);
+  text-align: left;
+  max-width: 600px;
+  padding: 20px;
+  color: #fff;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.header-15-hero-text h1 {
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #fff;
+      font-family: 'Lobster', cursive;
+
+}
+
+.header-15-subtext {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #eee;
+}
+
+.header-15-schedule-btn {
+background-color: #fbb500;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 30px;
+}
+
+.header-15-tagline {
+    font-size: 14px;
+    font-weight: bold;
+    background: #ffffff33;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .header-15-hero-text {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .header-15-hero-text h1 {
+        font-size: 28px;
+    }
+
+    .header-15-subtext {
+        font-size: 14px;
+    }
+}
+  .header-15 #nav .navbar-collapse {
+  z-index: 999;
+}
