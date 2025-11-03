@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+
+.header-2{
+  font-family:'Playfair Display',serif!important;
+  position: absolute;
+}
+
+.header-2 .header-holder{
+  background-color: transparent;
+}
+.header-2 .main-navigation.navbar-right > li > a{
+color: var(--tertiary-color);
+font-size: 14px;
+font-weight: 500;
+}
+.header-2 .main-navigation.navbar-right > li > a:hover{
+  color: var(--seconary-color);
+  }
+
+.header-2 #nav {
+padding-top: 30px;
+  }
+  .header-2 .main-navigation.navbar-right > li.active{
+ border-bottom: 3px solid var(--tertiary-color);
+   }
+
+   .header-2 .main-navigation.navbar-right > li {
+    padding: 5px 8px;
+
+   }
+
+   @media (max-width: 768px) {
+    .header-2 #nav{
+      padding-top: 0px;
+    }
+    .navbar-default .navbar-toggle{
+      border-color:var(--tertiary-color)!important;
+     }
+     .navbar-default .navbar-toggle .icon-bar {
+      background-color: var(--tertiary-color)!important;
+  }
+  #nav .navbar-collapse {
+    background-color: var(--primary-color);
+  }
+  .header-2 .main-navigation.navbar-right > li > a :hover{
+    color: black;
+  }
+  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus{
+    color: #fff;
+    background-color: var(--primary-color);
+  }
+
+
+
+  }
+  .header-2-no-gutter [class*="col-"] {padding-left:0;padding-right:0;}
+
+/* --- Section wrapper ----------------------------------- */
+.header-2-hero{
+  position:relative;
+padding: 75px 0 100px;        /* top / bottom space */
+  color:#fff;
+}
+.header-2-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.1);
+}
+
+/* --- Text ---------------------------------------------- */
+.header-2-tagline{
+  font-family:'Playfair Display',serif;
+  font-size:24px;
+  font-weight:600;
+  margin:0 0 12px;
+}
+.header-2-heading{
+  font-size:72px;
+  font-weight:700;
+  line-height:1.1;
+  margin:0 0 50px;
+  color: #fff;
+  z-index: 999999;
+  position: relative;
+}
+@media (max-width:767px){
+  .header-2-heading{font-size:46px;}
+}
+
+/* --- Search card --------------------------------------- */
+.header-2-search-box{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+ padding: 18px 40px 22px;
+  margin: 0px 150px;
+
+}
+/* nav pills */
+.header-2-nav>li>a{
+  border-radius:0;
+  font-weight:600;
+  color:#555;
+  background: white;
+}
+.header-2-nav>li>a:hover,
+.header-2-nav>li.active>a,
+.header-2-nav>li.active>a:focus,
+.header-2-nav>li.active>a:hover{
+  background:var(--tertiary-color)!important;
+  color:#fff;
+}
+
+/* form fields */
+.header-2-search-form .form-control{height:46px;border-radius:0;}
+.header-2-btn-search{height:46px;font-weight:600;}
+
+
+.header-2-hero {
+  position: relative;
+  padding: 80px 0 100px;
+  color: #fff;
+  width: 100%!important;
+
+}
+
+.header-2-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.header-2-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.header-2-heading {
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 50px 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 767px) {
+  .header-2-heading {
+    font-size: 42px;
+  }
+}
+
+.header-2-search-box {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Align nav-pills horizontally and cleanly */
+.header-2-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-2-nav > li {
+  flex: 1;
+  text-align: center;
+}
+
+.header-2-nav > li > a {
+  border-radius: 0;
+  font-weight: 600;
+  color: #555;
+  padding: 12px 0;
+  background: #f9f9f9;
+  border: none;
+}
+.header-2-nav > li.active > a,
+.header-2-nav > li.active > a:focus,
+.header-2-nav > li.active > a:hover {
+  background: #00bfff !important;  /* sky blue */
+  color: #fff !important;
+}
+
+
+/* Form layout */
+.header-2-search-form .form-control {
+  height: 46px;
+  border-radius: 4px;
+}
+
+.header-2-search-form .btn {
+  height: 46px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+  .header-2 #nav .navbar-collapse {
+  z-index: 999;
+}
+/* Full-width mobile navbar for header-2 */
+@media (max-width: 767px) {
+  #header.header-2 .navbar-collapse {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    width: 100%;
+    background-color: var(--primary-color); /* match header bg */
+    z-index: 9999;
+    padding: 0;
+  }
+
+  #header.header-2 .navbar-nav {
+    float: none;
+    margin: 0;
+    text-align: center;
+  }
+
+  #header.header-2 .navbar-nav > li {
+    display: block;
+    float: none;
+    padding: 10px 0;
+  }
+
+  #header.header-2 .navbar-toggle {
+    position: relative;
+    z-index: 10000;
+  }
+}
