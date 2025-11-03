@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+.header-4{
+    font-family: 'Poppins', sans-serif!important;
+}
+:root {
+  --accent: #f9c705;;
+  --overlay: rgba(0, 0, 0, 0.55);
+  --dark-glass: rgba(1, 29, 33, 0.9);
+  --font-main: "Poppins", sans-serif;
+}
+
+/* Core Header Layout */
+.header-4 {
+  background: #fff;
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
+  font-family: 'Poppins', sans-serif;
+}
+.header-4-logo img {
+  max-height: 40px;
+}
+.middle-align {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Menu Center */
+.header-4-menu {
+  margin: 0;
+  padding-left: 0;
+}
+.header-4-menu > li {
+  display: inline-block;
+}
+.header-4-menu > li > a {
+  color: #000;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 10px 14px;
+  transition: all 0.3s ease;
+}
+.header-4-menu > li.active > a,
+.header-4-menu > li > a:hover {
+  color: #000;
+  background: transparent;
+  border-bottom: 2px solid #000;
+}
+
+/* CTA Button */
+.header-4-btn-cta {
+  background: #f9c705;
+  color: #fff;
+  font-weight: 600;
+  padding: 9px 24px;
+  font-size: 13px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+.header-4-btn-cta:hover {
+  background: #222;
+}
+
+/* Responsive Fixes */
+@media (max-width: 767px) {
+  .header-4-menu {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .header-4-btn-cta {
+    margin-top: 10px;
+    display: inline-block;
+  }
+}
+
+
+
+
+
+
+
+
+/* Sticky Header */
+.header-4.header-4--sticky {
+  position: fixed;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+.header-4.header-4--sticky .header-4-nav-holder {
+  padding: 14px 0;
+}
+.header-4.header-4--sticky .header-4-menu > li > a,
+.header-4.header-4--sticky .header-4-phone {
+  color: #000;
+}
+.header-4.header-4--sticky .header-4-btn-cta {
+  background: var(--accent);
+}
+.header-4.header-4--sticky .icon-bar {
+  background: #000;
+}
+
+/* Hero Section */
+.header-4-hero {
+  position: relative;
+  min-height: 660px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background: center/cover no-repeat;
+}
+.header-4-hero:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--overlay);
+}
+.header-4-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 170px 15px 120px;
+  max-width: 580px;
+  text-align: center;
+}
+.header-4-tagline {
+  color: #f9c705;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+.header-4-title {
+  font-size: 58px;
+  line-height: 1.15;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color:#fff;
+}
+.header-4-highlight {
+  color: var(--accent);
+}
+.header-4-sub {
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+/* Buttons */
+.header-4-btn-primary {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 50px;
+  margin-right: 14px;
+  transition: all 0.3s ease;
+}
+.header-4-btn-primary:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+.header-4-btn-secondary {
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  font-weight: 600;
+  padding: 11px 32px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+.header-4-btn-secondary i {
+  margin-left: 6px;
+}
+.header-4-btn-secondary:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+/* Coach Image */
+.header-4-coach-img {
+  position: absolute;
+  right: 6%;
+  bottom: 0;
+  max-width: 400px;
+  z-index: 1;
+}
+@media (max-width: 991px) {
+  .header-4-coach-img {
+    display: none;
+  }
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .header-4-title {
+    font-size: 36px;
+  }
+  .header-4-sub {
+    font-size: 13px;
+  }
+  .header-4-btn-primary,
+  .header-4-btn-secondary {
+    padding: 10px 24px;
+  }
+}
+
+
+  .header-4 #nav .navbar-collapse {
+  z-index: 999;
+}
