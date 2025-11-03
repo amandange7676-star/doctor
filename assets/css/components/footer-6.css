@@ -1,0 +1,111 @@
+.footer-area.footer-6 {
+    background-color: var(--primary-color); /* Dark background */
+}
+
+.footer-6 #page-footer a {
+    color: var(--primary-color)!important;
+}
+.footer-6 p, .footer-6 .widget-content,.footer-6 h3{
+    color: var(--tertiary-color)!important;
+}
+
+.footer-6 #page-footer {
+    text-align: center;
+    padding: 20px 0;
+}
+.footer-6 .footer-navigation {
+    color: #d1d1d1; /* Light gray color for the links */
+}
+
+.footer-6 .footer-lists {
+    position: relative;
+    list-style: none;
+    margin-left: -39px;
+}
+
+.footer-6 .footer-lists li {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.footer-6 .footer-lists li a {
+    position: relative;
+    color: #d1d1d1; /* Light gray text */
+    font-size: 16px;
+    font-weight: 400;
+    padding-left: 20px;
+    transition: all 300ms ease;
+}
+
+.footer-6 .footer-lists li a:before {
+    position: absolute;
+    content: '\f107'; /* Downward arrow */
+    left: 0px;
+    top: 2px;
+    line-height: 1em;
+    color: var(--secondary-color);; /* Golden accent color */
+    font-family: 'FontAwesome';
+}
+
+.footer-6 .footer-lists li a:hover {
+    color: var(--secondary-color);; /* Highlight color on hover */
+}
+
+.footer-6 .subscribe-widget .text {
+    position: relative;
+    color: #d1d1d1; /* Light gray for the description */
+    font-size: 14px;
+    line-height: 1.6em;
+    margin-bottom: 20px;
+}
+
+.footer-6 .subscribe-form {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.footer-6 .subscribe-form .form-group {
+    position: relative;
+    display: block;
+    margin-bottom: 0px;
+}
+
+.footer-6 .subscribe-form .form-group input[type="email"] {
+    position: relative;
+    width: 100%;
+    line-height: 30px;
+    padding: 10px 20px;
+    height: 45px;
+    color: #495057; /* Dark text for input */
+    font-size: 14px;
+    border-radius: 50px;
+    background: var(--tertiary-color);;
+    border: 1px solid #ced4da;
+    transition: all 300ms ease;
+}
+
+.footer-6 .subscribe-form .form-group button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 20px;
+    padding-right: 6px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);; /* Golden button */
+    border: none;
+}
+
+.footer-6 .main-footer .footer-bottom {
+    position: relative;
+    padding: 20px 0;
+    text-align: center;
+    background-color: var(--secondary-color);; /* Golden background for the bottom bar */
+}
+
+.footer-6 .main-footer .footer-bottom .copyright {
+    position: relative;
+    color: #2c2f38; /* Dark text for copyright */
+}
