@@ -1,0 +1,345 @@
+.header-9{
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+
+}
+/* Header 9 common styles */
+.header-9.offer-bar {
+    background-color: #113746;;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    padding: 5px 0;
+    color: #fff;
+}
+
+.header-9.offer-bar marquee span {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.header-9.header-luxen {
+border-bottom: 4px solid #e6b13c;
+}
+
+.header-9 .navbar-nav > li > a {
+    color: #000;
+    font-weight: 500;
+    min-height: 130px!important;
+    text-align: center!important;
+}
+
+.header-9 .navbar-nav > li.active > a {
+    position: relative;
+    background-color: #113746 !important;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    padding: 20px 15px;
+
+}
+.header-9 .navbar-nav > li.active > a::after {
+    content: "";
+    position: absolute;
+    bottom: 36px; /* adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; /* length of dash */
+    height: 3px; /* thickness of dash */
+    background-color: #e6b13c;
+    border-radius: 2px;
+}
+/* On hover for other nav items */
+.header-9 .navbar-nav > li > a:hover {
+    background-color: #113746;
+    color: #fff;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 15px;
+}
+
+/* Ensure navbar items align properly */
+.header-9 .navbar-nav > li > a {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 15px;
+}
+.header-9 .btn-warning {
+    background-color: #e6b13c;
+    border: none;
+}
+
+.header-9 .logo img {
+    max-height: 60px;
+}
+.header-9 .main-navigation > li > a.dropdown-toggle:hover{
+background-color: #113746;
+    color: #fff;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 15px;
+}
+
+/* Responsive Fixes for Header-9 */
+@media (max-width: 767px) {
+    .header-9 .navbar-default {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .header-9 .navbar-collapse {
+        width: 100%;
+    }
+
+    .header-9 .navbar-nav {
+        width: 100%;
+        margin: 0;
+    }
+
+    .header-9 .navbar-nav > li > a {
+        min-height: auto !important;
+        padding: 10px 15px;
+        justify-content: flex-start;
+        text-align: left !important;
+    }
+
+    .header-9 .navbar-toggle {
+        margin-top: 20px;
+        margin-right: 15px;
+    }
+
+    .header-9 .btn-warning {
+        margin: 15px 0 10px 15px;
+        padding: 10px 20px;
+        width: calc(100% - 30px);
+    }
+
+    .header-9 .logo {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .header-9 .logo img {
+        max-height: 50px;
+    }
+      .navbar-default .navbar-toggle .icon-bar {
+    background-color: #000 !important;
+  }
+   .navbar-default .navbar-toggle {
+    border-color: #2f2f2f !important;
+  }
+  .header-9 .navbar {
+    display: block!important;
+}
+.header-9 .btn-warning{
+    margin: 11px;
+    padding: 3px 9px;
+  color: #fff;
+  position: absolute;
+  top: 7px;
+  left: -67px;
+}
+
+}
+
+/* =============================
+   Lifestyle Section Container
+============================= */
+.header-9-lifestyle-section {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-size: cover!important;
+  background-position: center;
+  padding: 40px 20px 40px;
+  color: #fff;
+  text-align: center;
+}
+
+/* =============================
+   Title & Description
+============================= */
+.header-9-lifestyle-title {
+  font-size: 28px;
+  font-weight: 300;
+ margin-bottom: -20px;
+  color: #333;
+}
+
+.header-9-lifestyle-subtitle {
+font-size: 57px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #113746;
+}
+
+.header-9-lifestyle-desc {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* =============================
+   CTA Button
+============================= */
+.header-9-lifestyle-btn {
+  background-color: #113746;;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 25px;
+  transition: background 0.3s ease;
+  display: inline-block;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.header-9-lifestyle-btn:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+/* =============================
+   AVATAR CURVED LAYOUT
+============================= */
+.header-9-lifestyle-avatars {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.header-9-lifestyle-avatar-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  margin: 0 auto 60px;
+  position: relative;
+}
+
+/* Common Avatar Style */
+.header-9-lifestyle-avatar {
+  transition: all 0.4s ease;
+  margin: 0 6px;
+  border-radius: 20px;
+  object-fit: cover;
+  transform-origin: center center;
+  filter: brightness(1);
+  opacity: 1;
+}
+
+/* Individual Avatars for Arc Shape *//* ========== REVERSED ARC (outer large → center small) ========== */
+.avatar-1,
+.avatar-8 {
+  width: 160px;
+  height: 220px;
+  opacity: 0.7;
+  filter: brightness(0.8);
+  margin-top: 40px; /* ↓ pushes image down */
+}
+
+.avatar-2,
+.avatar-7 {
+  width: 140px;
+  height: 200px;
+  opacity: 0.8;
+  filter: brightness(0.9);
+margin-bottom: 8px;
+}
+
+.avatar-3,
+.avatar-6 {
+  width: 120px;
+  height: 180px;
+  opacity: 0.9;
+margin-bottom: 16px;
+}
+
+.avatar-4,
+.avatar-5 {
+  width: 100px;
+  height: 160px;
+  opacity: 1;
+margin-bottom: 25px;}
+
+
+/* Hover Pop Effect */
+.header-9-lifestyle-avatar:hover {
+  transform: scale(1.5);
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 1 !important;
+  filter: none !important;
+}
+/* =============================
+   Responsive Layout
+============================= */
+@media (max-width: 991px) {
+  .header-9-lifestyle-avatar {
+    width: 90px !important;
+    height: auto !important;
+  }
+
+  .avatar-1, .avatar-8 {
+    opacity: 0.4;
+  }
+
+  .avatar-2, .avatar-7 {
+    opacity: 0.6;
+  }
+
+  .avatar-3, .avatar-6 {
+    opacity: 0.8;
+  }
+
+  .avatar-4, .avatar-5 {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .header-9-lifestyle-avatar-row {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* ✅ This centers all images vertically */
+  gap: 10px;
+  flex-wrap: nowrap;
+  padding: 20px 0;
+  position: relative;
+  overflow-x: auto;
+  }
+header-9-lifestyle-avatar {
+  object-fit: cover;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 20px;
+  display: block; /* Prevents baseline alignment issues */
+}
+
+.header-9-lifestyle-avatar:hover {
+  transform: scale(1.5);
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+  .header-9-lifestyle-avatar {
+    width: 70px !important;
+    height: auto !important;
+    transform: rotate(0deg) !important;
+    margin: 5px !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  .header-9-lifestyle-title {
+    font-size: 22px;
+  }
+
+  .header-9-lifestyle-subtitle {
+    font-size: 28px;
+  }
+
+  .header-9-lifestyle-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+}
+
+  .header-9 #nav .navbar-collapse {
+  z-index: 999;
+}
