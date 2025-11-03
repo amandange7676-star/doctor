@@ -1,0 +1,151 @@
+.header-13{
+     font-family: 'Poppins', sans-serif!important;
+}
+.header-13-header {
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
+  	font-family: 'Poppins', sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #f5f7fa;
+}
+
+/* Yellow Patch as background */
+.header-13-yellow-bg {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 60%;
+	height: 100%;
+	background: #ffcd00;
+	clip-path: polygon(40% 0%, 100% 0%, 100% 100%, 0% 100%);
+	z-index: 0;
+}
+
+/* Logo */
+.header-13-logo {
+	height: 60px;
+	padding: 10px 0!important;
+}
+
+/* Navbar */
+.header-13-navbar {
+	background: transparent;
+	border: none;
+	z-index: 2;
+	position: relative;
+}
+
+.header-13-navbar .navbar-nav > li > a {
+	color: #000;
+	text-transform: uppercase;
+	font-size: 15px;
+}
+.header-13-header .navbar-collapse{
+  margin-top: 15px;
+}
+.header-13-navbar .navbar-nav > li > a:hover {
+	border-radius: 20px;
+}
+.header-13-btn {
+	background: #ff2c5d;
+	color: #fff !important;
+	border-radius: 20px;
+	padding: 8px 20px !important;
+  margin: 10px;
+}
+
+/* Hero Section */
+.header-13-hero {
+	position: relative;
+	z-index: 2;
+	margin-top: 30px;
+	padding: 50px 20px!important;
+}
+.header-13-header .navbar-nav li{
+margin: 10px;
+}
+.header-13-text p {
+	font-size: 14px;
+	color: #666;
+	letter-spacing: 1px;
+}
+
+.header-13-text h1 {
+	font-weight: 700;
+	font-size: 36px;
+	color: #111;
+	margin: 10px 0;
+}
+
+.header-13-text h3 {
+	color: #444;
+	font-weight: 400;
+	font-size: 28px;
+}
+
+.header-13-cta {
+	background: #ff2c5d;
+	color: #fff;
+	padding: 8px 20px !important;
+  	border-radius: 25px;
+	margin-top: 20px;
+	display: inline-block;
+}
+
+/* Right Image Area */
+.header-13-img-container {
+position: relative;
+  text-align: left;
+}
+
+.header-13-plant {
+width: 267px;
+  z-index: 2;
+  position: relative;
+  left: -139px;
+  top: 92px;
+}
+.header-13-watermark {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 160px;
+	color: #fff;
+	opacity: 0.15;
+	font-weight: bold;
+	z-index: 1;
+}
+.header-13-watermark {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1;
+	opacity: 1;
+}
+
+.header-13-watermark-img {
+	max-width: 500px;
+	width: 100%;
+	height: auto;
+}
+/* Responsive */
+@media (max-width: 767px) {
+	.header-13-yellow-bg,
+	.header-13-img-wrap {
+		display: none;
+	}
+	.header-13-text {
+		text-align: center;
+	}
+	.header-13-navbar .navbar-nav {
+		margin-top: 10px;
+	}
+}
+
+  .header-13 #nav .navbar-collapse {
+  z-index: 999;
+}
