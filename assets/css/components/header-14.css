@@ -1,0 +1,111 @@
+
+.header-14{
+    font-family: 'Lato', sans-serif!important;
+}
+
+.header-14-header-section {
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+}
+
+.header-14-navbar {
+    background-color: transparent;
+    border: none;
+    margin-bottom: 0;
+}
+
+.header-14-navbar .navbar-nav > li > a {
+    color: #fff !important;
+    font-weight: 400;
+}
+
+.header-14-navbar .navbar-nav > .dropdown > a .caret {
+    border-top-color: #fff;
+}
+
+.header-14-navbar .navbar-nav > .dropdown-menu {
+    background-color: #fff;
+    min-width: 200px;
+}
+.header-14-header-section .navbar-collapse{
+    padding: 25px;
+}
+.header-14-navbar .navbar-nav > .dropdown-menu > li > a {
+    color: #333;
+    padding: 10px 20px;
+}
+
+.header-14-navbar .navbar-nav > .dropdown-menu > li:hover > a,
+.header-14-navbar .navbar-nav > .dropdown-menu > li > a:hover {
+    background-color: #5d83c5;
+    color: #fff;
+}
+
+.header-14-navbar-brand img {
+    height: 40px;
+}
+
+.header-14-hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    max-width: 600px;
+    padding: 20px;
+    color: #fff;
+}
+
+.header-14-hero-text h1 {
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.header-14-subtext {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #eee;
+}
+
+.header-14-schedule-btn {
+    background-color: #1b3c89;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.header-14-tagline {
+    font-size: 14px;
+    font-weight: bold;
+    background: #ffffff33;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .header-14-hero-text {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .header-14-hero-text h1 {
+        font-size: 28px;
+    }
+
+    .header-14-subtext {
+        font-size: 14px;
+    }
+}
+  .header-14 #nav .navbar-collapse {
+  z-index: 999;
+}
