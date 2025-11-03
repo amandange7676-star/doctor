@@ -1,0 +1,145 @@
+.footer-8 {
+  background: #f8ffff;
+  padding: 40px 0;
+  font-family: 'Nunito', sans-serif;
+  color: #0b2c3d;
+}
+
+.footer-8-logo img {
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.footer-8-subscribe-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.footer-8-newsletter {
+  position: relative;
+  max-width: 100%;
+  margin-bottom: 15px;
+}
+
+.footer-8-input {
+  padding: 10px 15px;
+  border: none;
+  background: #e9fdff;
+  width: 100%;
+  border-radius: 30px;
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+
+.footer-8-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 45px;
+  background: #fecf42;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  text-align: center;
+  line-height: 38px;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+}
+
+.footer-8-links,
+.footer-8-policy {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-8-links li,
+.footer-8-policy li {
+  margin-bottom: 10px;
+}
+
+.footer-8-links a,
+.footer-8-policy a {
+  color: #0b2c3d;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.footer-8-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #fecf42;
+  border-radius: 50%;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.footer-8-separator {
+  margin: 30px 0;
+  border-top: 1px dashed #d8e9ec;
+}
+
+.footer-8-social a {
+  font-size: 20px;
+  color: #0b2c3d;
+  margin-right: 15px;
+}
+
+.footer-8-copy {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #0b2c3d;
+}
+
+.footer-8-loc-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.footer-8-loc-text {
+  font-size: 13px;
+  color: #0b2c3d;
+}
+
+.footer-8-location {
+  margin-top: 15px;
+}
+
+/* Responsive Fixes */
+@media (max-width: 767px) {
+  .footer-8-newsletter {
+    max-width: 100%;
+  }
+  .footer-8-btn {
+    right: 5px;
+  }
+  .footer-8-social {
+    margin-bottom: 20px;
+  }
+  .footer-8-location {
+    margin-bottom: 15px;
+  }
+}
+
+  .whatsappfloat {
+    position: fixed;
+    width: 55px;
+    height: 55px;
+    bottom: 20px;
+    right: 17px;
+    background-color: #25d366;
+    color: #fff;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
+}
+.icon-float {
+  margin-top: 12px;
+  color: #fff;
+}
