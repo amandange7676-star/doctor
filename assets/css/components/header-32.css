@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+.header-32 {
+   font-family: 'Rajdhani', sans-serif!important;
+}
+
+.header-32 {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
+}
+
+/* Top Bar */
+.header-32-top-bar {
+  background: #1b1b1b;
+  padding: 14px 0;
+  font-size: 13px;
+  color: #fff;
+}
+
+.header-32-bar-list {
+  margin: 0;
+}
+
+.header-32-bar-list i {
+  margin-right: 4px;
+}
+
+/* Logo and Navigation Holder */
+.header-32-holder {
+  /* background: rgba(0, 0, 0, 0.04); */
+  padding: 12px 0;
+}
+
+.header-32-logo img {
+  max-height: 46px;
+}
+
+.header-32-navbar {
+  background: transparent;
+  border: none;
+  margin: 0;
+}
+
+.header-32-menu > li > a {
+   font-family: 'Rajdhani', sans-serif!important;
+  font-size: 16px!important;
+  padding: 10px 15px;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+  font-weight: 600;
+}
+
+.header-32-menu > li.active > a,
+.header-32-menu > li > a:hover,
+.header-32-menu > li > a:focus {
+  color: #ae9a64!important;
+}
+
+/* Underline Hover */
+.header-32-menu > li > a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: #ae9a64;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.header-32-menu > li > a:hover::before,
+.header-32-menu > li.active > a::before {
+  transform: scaleX(1);
+}
+
+/* Quote Button */
+.header-32-btn-quote {
+  background: #ae9a64;
+  border: none;
+  color: #fff !important;
+  padding: 9px 20px;
+  margin-left: 8px;
+}
+
+.header-32-btn-quote:hover {
+  background: #d99a00;
+}
+
+/* Search Icon */
+.header-32-search-li a {
+  padding: 10px 10px 10px 5px;
+}
+
+  .header-32 #nav .navbar-collapse {
+  z-index: 999;
+}
+
+
+/* ===============================
+   HERO SECTION
+   =============================== */
+.header-32-hero {
+    margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 640px;
+  background: center/cover no-repeat;
+  color: #fff;
+  display: flex;
+  align-items: flex-start;
+   font-family: 'Rajdhani', sans-serif!important;
+
+}
+
+.header-32-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+}
+
+.header-32-hero-content {
+  position: relative;
+  z-index: 2;
+padding: 175px 80px 100px 80px;
+}
+
+.header-32-hero-title {
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  color:#4f4f4f;
+  font-family: 'Rajdhani', sans-serif!important;
+
+}
+
+.header-32-highlight {
+  color: #ae9a64;
+}
+
+.header-32-hero-sub {
+font-size: 19px;
+  margin-bottom: 35px;
+  color: #4f4f4f;
+  font-weight: 500;
+
+}
+
+.header-32-btn-primary {
+  background: #ae9a64;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+}
+
+.header-32-btn-primary:hover {
+  background: #d99a00;
+  transform: translateY(-3px);
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 767px) {
+  .header-32-bar-list {
+    text-align: center;
+  }
+
+  .header-32-hero-content {
+    padding-top: 220px;
+  }
+
+  .header-32-hero-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-32-bar-list {
+    font-size: 10px;
+  }
+
+  .header-32-hero-sub {
+    font-size: 13px;
+  }
+}
+
+  ───────────────────────────────────────────── */
+.header-32.header-32--sticky {
+  position: fixed;        /* take header out of normal flow */
+  top: 0; left: 0; width: 100%;
+  background: #fff;       /* solid white */
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  z-index: 1000;
+  transition: background .3s ease, box-shadow .3s ease;
+}
+
+/* hide the black top‑bar once we’re sticky */
+.header-32.header-32--sticky .header-32-top-bar {
+  display: none;
+}
+
+.header-32.header-32--sticky .header-32-holder {
+  background: transparent;
+}
+
+.header-32.header-32--sticky .header-32-menu   > li > a,
+.header-32.header-32--sticky .header-32-search-li a,
+.header-32.header-32--sticky .header-32-bar-list,
+.header-32.header-32--sticky .ri-phone-line,
+.header-32.header-32--sticky .ri-map-pin-line,
+.header-32.header-32--sticky .ri-mail-line {
+  color: #000 ;
+}
+
+
+.header-32.header-32--sticky .header-32-menu > li > a::before {
+  background:#ae9a64;
+}
+
+.header-32.header-32--sticky .header-32-btn-quote {
+  background:#ae9a64;
+  color:#fff !important;
+}
