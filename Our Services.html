@@ -1,0 +1,104 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="Clinics offering professional healthcare services, medical consultation, and treatment for various health conditions.">
+            <meta name="keywords" content="clinic, medical services, healthcare, treatment, consultation">
+            <title>Our Services</title>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <link rel="stylesheet" href="assets/css/style.css">
+            <link rel="stylesheet" href="assets/css/middle_sections.css">
+            <link rel="stylesheet" href="assets/css/components/header-1.css">
+            <link rel="stylesheet" href="assets/css/components/footer-2.css">
+            <link rel="stylesheet" href="assets/css/bootstrap.css">
+            <link rel="stylesheet" href="assets/css/plugins.css">
+	        <link rel="stylesheet" href="assets/css/custom-Imports.css">
+            <link rel="stylesheet" href="assets/css/resonsive.css">
+            	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+        <style>
+            :root {
+                --site-font: roboto;
+            }
+            body, #wrapper, #wrapper * {
+                font-family: var(--site-font) !important;
+            }
+        </style>
+        </head>
+        <body class="theme-2">
+            <div id="wrapper">
+            <div id="header"></div>
+            <div id="mainPageContent">
+        
+    <div id="middle_section_default">
+    <article class="container text-info-block">
+        <div class="row">
+            <div class="col-xs-12" style="text-align: center;">
+                <h2>Please add middle section</h2><br>
+                <button class="custombtn" id="AddNewSection">Add Sections</button>
+
+            </div>
+        </div>
+    </article>
+</div>
+</div>
+            <div id="footer"></div>
+            </div>
+            <script src="assets/js/jquery.js"></script>
+            <script src="assets/js/init.js"></script>
+            <script src="assets/js/plugins.js"></script>
+            <script src="assets/js/jquery.main.js"></script>
+            <script src="assets/js/gsap.min.js"></script>
+            <script src="assets/js/ScrollTrigger.min.js"></script>
+            <script src="assets/js/Observer.min.js"></script>
+            <script src="assets/js/gsap.effects.js"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+            <script>
+                var fileName = document.title || "index";
+
+                $(document).ready(function () {
+                /* Start code to load js and css files properly on local server or production server: NOte: this is the workwround, need to fix this */
+                loadHeaderFooter("header", "assets/doctor/doctor/header.html");
+                loadHeaderFooter("footer", "assets/doctor/doctor/footer.html");
+                /*  End code */
+
+                /*  Start code to load js and css files properly on Githubpages  */
+                loadHeaderFooter("header", "header.html");
+                loadHeaderFooter("footer", "footer.html");
+                /* End code */
+
+                });
+
+                function loadHeaderFooter(id, file) {
+                    $("#" + id).load(file, function (response, status, xhr) {
+                        if (status === "error") {
+                            console.error("Error loading " + file + ":", xhr.status, xhr.statusText);
+                            return;
+                        }
+
+                        $("#" + id).find("a").addClass("edit-site");
+
+                        if (id === "header") {
+                            if (fileName.toLowerCase() === "index" || fileName.toLowerCase() === "home") {
+                                $("#" + id).find(".main-header-section").css("display", "inline-block");
+                            } else {
+                                $("#" + id).find(".main-header-section").css("display", "none");
+                                $("#" + id).find(".header-breadcrumb-section").css("display", "inline-block");
+                                $("#" + id).find(".header-breadcrumb-section .Page_name")
+                                    .text(fileName.charAt(0).toUpperCase() + fileName.slice(1));
+                            }
+                        }
+                    });
+                }
+            </script>
+                        <script src="assets/js/middle-section.js"></script>
+
+        </body>
+        </html>
+    
