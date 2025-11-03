@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+.header-34 {
+  position: absolute!important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
+  font-family: 'Rajdhani', sans-serif!important;
+}
+ .header-34 .main-navigation > li > a{
+font-size: 18px !important;
+  font-weight: 500;
+ }
+/* Top Bar */
+.header-34-top-bar {
+  background: #392e2e45;
+  padding: 14px 0;
+  font-size: 13px;
+  color: #fff;
+}
+
+.header-34-bar-list {
+  margin: 0;
+}
+
+.header-34-bar-list i {
+  margin-right: 4px;
+}
+
+/* Logo and Navigation Holder */
+.header-34-holder {
+  background: rgba(0, 0, 0, 0);
+  padding: 12px 0;
+}
+
+.header-34-logo img {
+  max-height: 46px;
+}
+
+.header-34-navbar {
+  background: transparent;
+  border: none;
+  margin: 0;
+}
+
+.header-34-menu > li > a {
+  color: #5b5b5b !important;
+   font-family: 'Rajdhani', sans-serif!important;
+  font: 14px!important;
+  padding: 10px 15px;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.header-34-menu > li.active > a,
+.header-34-menu > li > a:hover,
+.header-34-menu > li > a:focus {
+  color: #a3d200!important;
+}
+
+/* Underline Hover */
+.header-34-menu > li > a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: #a3d200;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.header-34-menu > li > a:hover::before,
+.header-34-menu > li.active > a::before {
+  transform: scaleX(1);
+}
+
+/* Quote Button */
+.header-34-btn-quote {
+  background: #a3d200;
+  border: none;
+  color: #fff !important;
+  padding: 9px 20px;
+  margin-left: 8px;
+}
+
+.header-34-btn-quote:hover {
+  background: #a3d200;
+}
+
+/* Search Icon */
+.header-34-search-li a {
+  padding: 10px 10px 10px 5px;
+}
+
+  ───────────────────────────────────────────── */
+.header-34.header-34--sticky {
+  position: fixed;        /* take header out of normal flow */
+  top: 0; left: 0; width: 100%;
+  background: #fff;       /* solid white */
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  z-index: 1000;
+  transition: background .3s ease, box-shadow .3s ease;
+}
+
+/* hide the black top‑bar once we’re sticky */
+.header-34.header-34--sticky .header-34-top-bar {
+  display: none;
+}
+
+.header-34.header-34--sticky .header-34-holder {
+  background: transparent;
+}
+
+.header-34.header-34--sticky .header-34-menu   > li > a,
+.header-34.header-34--sticky .header-34-search-li a,
+.header-34.header-34--sticky .header-34-bar-list,
+.header-34.header-34--sticky .ri-phone-line,
+.header-34.header-34--sticky .ri-map-pin-line,
+.header-34.header-34--sticky .ri-mail-line {
+  color: #000 ;
+}
+
+
+.header-34.header-34--sticky .header-34-menu > li > a::before {
+  background:#a3d200;
+}
+
+.header-34.header-34--sticky .header-34-btn-quote {
+  background:#a3d200;
+  color:#fff !important;
+}
+.header-34-hero {
+  min-height: 660px;
+  background: center/cover no-repeat;
+  font-family: 'Playfair Display', serif !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+  .header-34 #nav .navbar-collapse {
+  z-index: 999;
+}
+/* ===============================
+   HERO SECTION
+   =============================== */
+.header-34-hero {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 660px;
+  background: center/cover no-repeat;
+  color: #fff;
+  display: flex;
+  align-items: flex-start;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.header-34-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 28, 20, 0.55); /* earthy dark green overlay */
+}
+
+.header-34-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 180px 60px 100px 60px;
+}
+
+.header-34-hero-title {
+  font-weight: 800;
+  font-size: 58px;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #5b5b5b;
+  font-family: 'Playfair Display', serif !important;
+}
+
+.header-34-highlight {
+  color: #fff; /* Herbal green */
+  text-shadow: 1px 1px 1px #0000002e;
+}
+
+.header-34-hero-sub {
+  font-size: 18px;
+  margin-bottom: 30px;
+  max-width: 600px;
+  color: #393939;
+  font-family: 'Inter', sans-serif;
+}
+
+.header-34-btn-primary {
+padding: 14px 36px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(122, 167, 28, 0.3);
+  transition: all 0.3s ease;
+color: #151515;
+  border: 2px solid #fff;
+  background: white;
+}
+
+.header-34-btn-primary:hover {
+  background:#a3d200;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(74, 105, 0, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .header-34-hero-content {
+    padding: 160px 30px 80px 30px;
+  }
+
+  .header-34-hero-title {
+    font-size: 34px;
+  }
+
+  .header-34-hero-sub {
+    font-size: 15px;
+  }
+
+  .header-34-btn-primary {
+    padding: 12px 28px;
+    font-size: 14px;
+  }
+}
