@@ -1,4 +1,3 @@
-
 /* =========================================================
    CONFIG
 ========================================================= */
@@ -8,21 +7,24 @@ const ALLOWED = new Set([
   "UL","LI","LABEL","B"
 ]);
 
-const KNOWN_STABLE_ANCHORS = ["#page-content",".pageWrapper","#main","main","#content","#root"];
+const KNOWN_STABLE_ANCHORS = [
+  "#page-content",".pageWrapper","#main","main","#content","#root"
+];
 const VOLATILE_RE = /(active|current|open|close|show|hide|hidden|visible|slick|swiper|lazy|clone|tmp|draggable|loading|loaded|mount|hydr|portal)/i;
 const DEBUG = true;
+
 /* =========================================================
    FIND STABLE ANCHOR SELECTOR
 ========================================================= */
 function findStableAnchorSelector(el){
-  let node=el;
+  let node = el;
   while(node && node!==document.body){
     const id = getStableId(node);
     if (id) return `#${cssEscapeSafe(id)}`;
-    node=node.parentElement;
+    node = node.parentElement;
   }
   for(const sel of KNOWN_STABLE_ANCHORS){
-    const a=el.closest(sel);
+    const a = el.closest(sel);
     if(a) return sel;
   }
   return "body";
@@ -40,22 +42,6 @@ function cssEscapeSafe(ident=""){
 
 function getStableId(el){
   return (el.id && !VOLATILE_RE.test(el.id)) ? el.id : "";
-}
-/* =========================================================
-   APPLY TEXT UPDATE TO DOCUMENT
-========================================================= */
-function applyTextUpdate(doc, ch) {
-  const el = findElementByAnchorSelector(doc, ch.anchorSel);
-  if (el) {
-    // Only replace if text matches old text (to avoid over-updating)
-    if (ch.oldText && el.textContent.trim() !== ch.oldText.trim()) {
-      console.warn("Skipping update: original text mismatch", ch);
-      return;
-    }
-    el.textContent = ch.newText;
-  } else {
-    console.warn("Could not find element for selector:", ch.anchorSel);
-  }
 }
 
 function getStableClasses(el){
@@ -141,9 +127,8 @@ function getDynamicSourceFile(el){
 ========================================================= */
 let originalHTML=null;
 let modifiedHTML=null;
-const includeCache = new Map(); // store header/footer original content
+const includeCache = new Map(); // header/footer content cache
 
-// load main page
 fetch(window.location.href,{cache:"no-store"})
  .then(r=>r.text())
  .then(html=>{ 
@@ -221,13 +206,21 @@ function onMutations(records){
 }
 
 /* =========================================================
+   APPLY TEXT UPDATE TO DOCUMENT
+========================================================= */
+function applyTextUpdate(target,newText){
+  const tn=Array.from(target.childNodes).find(n=>n.nodeType===Node.TEXT_NODE);
+  if(tn) tn.nodeValue=newText;
+  else target.textContent=newText;
+}
+
+/* =========================================================
    APPLY CHANGES BACK TO FILES
 ========================================================= */
 async function updateOriginalHTMLWithTextChanges(){
   if(!changeLog.length){ alert("No text changes detected."); return; }
 
   const filesToUpdate = new Map();
-  // group changes by file
   for(const ch of changeLog){
     if(!filesToUpdate.has(ch.sourceFile)) filesToUpdate.set(ch.sourceFile, []);
     filesToUpdate.get(ch.sourceFile).push(ch);
@@ -259,8 +252,31 @@ async function updateOriginalHTMLWithTextChanges(){
     DEBUG&&console.log(`Updated ${updated} items in ${file}`);
   }
 
-  alert("All changes applied locally. You can now push to GitHub.");
-  modifiedHTML = includeCache; // store updated files map
+  modifiedHTML = includeCache;
+  alert("✅ All changes applied locally. You can now download or push to GitHub.");
+}
+
+/* =========================================================
+   DOWNLOAD MODIFIED FILES LOCALLY
+========================================================= */
+function downloadFile(filename, text) {
+  const blob = new Blob([text], {type: "text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function downloadAllUpdatedFiles() {
+  if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
+    alert("No updated files to download.");
+    return;
+  }
+  modifiedHTML.forEach((html, file) => {
+    downloadFile(file, html);
+  });
+  alert("✅ All updated files downloaded successfully.");
 }
 
 /* =========================================================
@@ -310,87 +326,63 @@ async function saveAndPushChanges() {
       console.error("GitHub push error:", err);
     }
   }
-  alert("All modified files pushed to GitHub.");
+  alert("✅ All modified files pushed to GitHub.");
 }
 
+/* =========================================================
+   UI BUTTONS
+========================================================= */
 window.enableTextEditing=enableTextEditing;
 window.saveAndPushChanges=saveAndPushChanges;
 window.updateOriginalHTMLWithTextChanges=updateOriginalHTMLWithTextChanges;
-
+window.downloadAllUpdatedFiles=downloadAllUpdatedFiles;
 
 document.addEventListener('DOMContentLoaded', function () {
-    const feature = localStorage.getItem("featureEnabled");
-     console.log('feature enabled :-------',feature)
-        if (feature === "load buttons") {
-          createButtons();
-        } else {
-          console.log("Feature is disabled");
-        }
+  const feature = localStorage.getItem("featureEnabled");
+  console.log('feature enabled:',feature)
+  if (feature === "load buttons") {
+    createButtons();
+  }
 });
 
-// Function to dynamically create and append the buttons
 function createButtons() {
-    // Create a container for the buttons
-    const buttonContainer = document.createElement('div');
-    buttonContainer.id = 'buttonContainer'; // Add an ID for styling
+  const buttonContainer = document.createElement('div');
+  buttonContainer.id = 'buttonContainer';
+  Object.assign(buttonContainer.style,{
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    flexWrap:'wrap',
+    gap:'15px',
+    marginTop:'20px',
+    marginBottom:'30px'
+  });
 
-    // Add CSS styles to the container
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.justifyContent = 'center'; // Center the buttons horizontally
-    buttonContainer.style.alignItems = 'center'; // Vertically center the buttons
-    buttonContainer.style.flexWrap = 'wrap'; // Ensure buttons wrap if necessary
-    buttonContainer.style.gap = '15px'; // Adds more space between the buttons
-    buttonContainer.style.marginTop = '20px';
-    buttonContainer.style.marginBottom = '30px'; // Add some space below
+  const enableEditingBtn = createButton('Enable Text Editing','enableEditingBtn',enableTextEditing);
+  const updateHTMLBtn = createButton('Update HTML with Changes','updateHTMLBtn',updateOriginalHTMLWithTextChanges);
+  const downloadBtn = createButton('Download Updated Files','downloadBtn',downloadAllUpdatedFiles);
+  const saveChangesBtn = createButton('Save and Push Changes','saveChangesBtn',saveAndPushChanges);
 
-    // Create the buttons
-    const enableEditingBtn = createButton('Enable Text Editing', 'enableEditingBtn', enableTextEditing);
-    const saveChangesBtn = createButton('Save and Push Changes', 'saveChangesBtn', saveAndPushChanges);
-    const updateHTMLBtn = createButton('Update HTML with Changes', 'updateHTMLBtn', updateOriginalHTMLWithTextChanges);
-
-    // Append the buttons to the container
-    buttonContainer.appendChild(enableEditingBtn);
-    buttonContainer.appendChild(saveChangesBtn);
-    buttonContainer.appendChild(updateHTMLBtn);
-
-    // Append the button container to the body
-    document.body.appendChild(buttonContainer);
+  [enableEditingBtn,updateHTMLBtn,downloadBtn,saveChangesBtn].forEach(btn=>buttonContainer.appendChild(btn));
+  document.body.appendChild(buttonContainer);
 }
 
-// Helper function to create buttons
-function createButton(text, id, clickHandler) {
-    const button = document.createElement('button');
-    button.textContent = text;
-    button.id = id;
-    button.addEventListener('click', clickHandler);
-
-    // Style the button
-    button.style.padding = '12px 24px';
-    button.style.fontSize = '16px';
-    button.style.cursor = 'pointer';
-    button.style.border = '1px solid #ccc';
-    button.style.borderRadius = '4px';
-    button.style.backgroundColor = '#4CAF50';
-    button.style.color = 'white';
-    button.style.transition = 'background-color 0.3s ease';
-
-    // Add hover and focus styles
-    button.addEventListener('mouseover', function () {
-        button.style.backgroundColor = '#45a049';
-    });
-
-    button.addEventListener('mouseout', function () {
-        button.style.backgroundColor = '#4CAF50';
-    });
-
-    button.addEventListener('focus', function () {
-        button.style.boxShadow = '0 0 5px rgba(0, 128, 0, 0.6)';
-        button.style.outline = 'none';
-    });
-
-    button.addEventListener('blur', function () {
-        button.style.boxShadow = 'none';
-    });
-
-    return button;
+function createButton(text,id,clickHandler){
+  const button=document.createElement('button');
+  button.textContent=text;
+  button.id=id;
+  button.addEventListener('click',clickHandler);
+  Object.assign(button.style,{
+    padding:'12px 24px',
+    fontSize:'16px',
+    cursor:'pointer',
+    border:'1px solid #ccc',
+    borderRadius:'4px',
+    backgroundColor:'#4CAF50',
+    color:'white',
+    transition:'background-color 0.3s ease'
+  });
+  button.addEventListener('mouseover',()=>button.style.backgroundColor='#45a049');
+  button.addEventListener('mouseout',()=>button.style.backgroundColor='#4CAF50');
+  return button;
 }
