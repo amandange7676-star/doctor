@@ -11,6 +11,22 @@ const ALLOWED = new Set([
 const KNOWN_STABLE_ANCHORS = ["#page-content",".pageWrapper","#main","main","#content","#root"];
 const VOLATILE_RE = /(active|current|open|close|show|hide|hidden|visible|slick|swiper|lazy|clone|tmp|draggable|loading|loaded|mount|hydr|portal)/i;
 const DEBUG = true;
+/* =========================================================
+   FIND STABLE ANCHOR SELECTOR
+========================================================= */
+function findStableAnchorSelector(el){
+  let node=el;
+  while(node && node!==document.body){
+    const id = getStableId(node);
+    if (id) return `#${cssEscapeSafe(id)}`;
+    node=node.parentElement;
+  }
+  for(const sel of KNOWN_STABLE_ANCHORS){
+    const a=el.closest(sel);
+    if(a) return sel;
+  }
+  return "body";
+}
 
 /* =========================================================
    HELPERS
