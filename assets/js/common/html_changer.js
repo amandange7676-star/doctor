@@ -23,40 +23,9 @@ function cssEscapeSafe(ident=""){
   return String(ident).replace(/([^\w-])/g,"\\$1");
 }
 
-function getStableId(el){
-  return (el.id && !VOLATILE_RE.test(el.id)) ? el.id : "";
-}
+function getStableId(el){ return (el.id && !VOLATILE_RE.test(el.id)) ? el.id : ""; }
 
-function getStableClasses(el){
-  return Array.from(el.classList||[]).filter(c=>!VOLATILE_RE.test(c));
-}
-
-function jaccard(aArr,bArr){
-  const A=new Set((aArr||[]).filter(Boolean));
-  const B=new Set((bArr||[]).filter(Boolean));
-  if(!A.size && !B.size) return 0;
-  let inter=0; for(const v of A) if(B.has(v)) inter++;
-  return inter/(A.size+B.size-inter);
-}
-
-function levenshtein(a="",b=""){
-  const m=a.length,n=b.length;
-  const dp=Array.from({length:m+1},()=>Array(n+1).fill(0));
-  for(let i=0;i<=m;i++) dp[i][0]=i;
-  for(let j=0;j<=n;j++) dp[0][j]=j;
-  for(let i=1;i<=m;i++){
-    for(let j=1;j<=n;j++){
-      dp[i][j]=(a[i-1]===b[j-1])?dp[i-1][j-1]:Math.min(dp[i-1][j-1]+1,dp[i][j-1]+1,dp[i-1][j]+1);
-    }
-  }
-  return dp[m][n];
-}
-
-function similarity(a,b){
-  if(!a||!b) return 0;
-  const A=String(a),B=String(b);
-  return 1 - (levenshtein(A,B) / Math.max(A.length,B.length));
-}
+function getStableClasses(el){ return Array.from(el.classList||[]).filter(c=>!VOLATILE_RE.test(c)); }
 
 function ancestorSignature(el, root){
   const sig=[]; let node=el.parentElement; let guard=0;
@@ -65,18 +34,6 @@ function ancestorSignature(el, root){
     node=node.parentElement;
   }
   return sig;
-}
-
-function ancestorOverlapScore(a,b){
-  const len=Math.min(a.length,b.length);
-  if(!len) return 0;
-  let total=0;
-  for(let i=0;i<len;i++){
-    const idScore = (a[i].id && b[i].id) ? (a[i].id===b[i].id?1:0) : 0;
-    const clsScore=jaccard(a[i].classes,b[i].classes);
-    total += Math.max(idScore, clsScore);
-  }
-  return total/len;
 }
 
 function nthPath(fromEl, root){
@@ -109,9 +66,7 @@ function findStableAnchorSelector(el){
 function getDynamicSourceFile(el){
   let node=el;
   while(node && node!==document.body){
-    if(node.dataset && node.dataset.src){
-      return node.dataset.src;
-    }
+    if(node.dataset && node.dataset.src) return node.dataset.src;
     node=node.parentElement;
   }
   return null;
@@ -126,10 +81,7 @@ const includeCache = new Map();
 
 fetch(window.location.href,{cache:"no-store"})
  .then(r=>r.text())
- .then(html=>{ 
-   originalHTML=html; 
-   DEBUG&&console.log(" Original HTML loaded."); 
- })
+ .then(html=>{ originalHTML=html; DEBUG&&console.log(" Original HTML loaded."); })
  .catch(err=>console.error(" Error loading original HTML:",err));
 
 /* =========================================================
@@ -159,18 +111,22 @@ function resolveEditableElementFromTextNode(node){
   return null;
 }
 
+/* =========================================================
+   Enable text editing & capture all input/paste/delete
+========================================================= */
 function enableTextEditing(){
   const sel = Array.from(ALLOWED).map(t=>t.toLowerCase()).join(",");
   document.querySelectorAll(sel).forEach(el=>{
     const t=cleanText(el.textContent);
-    if(t && !ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
+    if(!ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
     if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el, ELEMENT_ORIG.get(el) || "");
     el.contentEditable="true";
     el.style.outline="1px dashed #0088ff";
 
-    // Add input listener to capture typing, paste, delete all
+    // Capture all input events (typing/paste/delete)
     el.addEventListener("input",()=>scheduleChange(el));
   });
+
   if(!window.MO){
     window.MO=new MutationObserver(records=>{
       records.forEach(r=>{
@@ -182,9 +138,10 @@ function enableTextEditing(){
     });
     window.MO.observe(document.body,{characterData:true,characterDataOldValue:true,subtree:true});
   }
-  alert("Editing enabled. Start typing or pasting to edit text.");
+  alert("Editing enabled. Start typing, pasting, or deleting text.");
 }
 
+/* Debounce per element */
 function scheduleChange(el){
   const prevTimer = pendingTimers.get(el);
   if(prevTimer) clearTimeout(prevTimer);
@@ -193,9 +150,10 @@ function scheduleChange(el){
 }
 
 function recordChange(el){
-  const newText = cleanText(el.textContent || "");
+  // Capture innerHTML instead of textContent to handle <br> and empty p
+  const newText = el.innerHTML.trim();
   const oldText = ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
-  if(newText===oldText) { pendingTimers.delete(el); return; }
+  if(newText===oldText){ pendingTimers.delete(el); return; }
 
   const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
   const anchorSel = findStableAnchorSelector(el);
@@ -212,34 +170,28 @@ function recordChange(el){
     changeLog[idx].newText = newText;
     changeLog[idx].ts = Date.now();
   } else {
-    const entry = {
-      uid: key,
-      sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
-      ts: Date.now()
-    };
+    const entry = {uid:key,sourceFile,anchorSel,tag,oldText,newText,classSig,id,ancSig,nth,ts:Date.now()};
     latestByKey.set(key, changeLog.push(entry)-1);
   }
 
   ELEMENT_LATEST.set(el,newText);
   pendingTimers.delete(el);
-
-  DEBUG && console.log("✏️ Coalesced change recorded:", changeLog[changeLog.length-1]);
+  DEBUG && console.log("✏️ Coalesced change:", changeLog[changeLog.length-1]);
 }
 
 /* =========================================================
-   APPLY TEXT UPDATE
+   APPLY TEXT UPDATE TO ELEMENT
 ========================================================= */
-function applyTextUpdate(target,newText){
-  const tn=Array.from(target.childNodes).find(n=>n.nodeType===Node.TEXT_NODE);
-  if(tn) tn.nodeValue=newText;
-  else target.textContent=newText;
+function applyTextUpdate(target,newHTML){
+  target.innerHTML = newHTML;
 }
 
 /* =========================================================
    UPDATE ORIGINAL FILES
 ========================================================= */
-async function updateOriginalHTMLWithTextChanges(){
-  if(!changeLog.length){ alert("No text changes detected."); return; }
+async function updateOriginalHTMLWithTextChanges(btn){
+  if(btn) toggleButton(btn,true,"Processing...");
+  if(!changeLog.length){ alert("No text changes detected."); if(btn) toggleButton(btn,false); return; }
 
   const filesToUpdate = new Map();
   for(const ch of changeLog){
@@ -260,12 +212,10 @@ async function updateOriginalHTMLWithTextChanges(){
     let updated=0;
     for(const ch of changes){
       const { tag, oldText, newText } = ch;
-      const cands = Array.from(root.getElementsByTagName(tag)).filter(e => cleanText(e.textContent)===oldText);
+      const cands = Array.from(root.getElementsByTagName(tag))
+                        .filter(e => e.innerHTML.trim()===oldText.trim());
       const target = cands[0];
-      if(target){
-        applyTextUpdate(target,newText);
-        updated++;
-      }
+      if(target){ applyTextUpdate(target,newText); updated++; }
     }
 
     const newHTML = "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
@@ -275,6 +225,7 @@ async function updateOriginalHTMLWithTextChanges(){
 
   modifiedHTML = includeCache;
   alert("✅ All changes applied locally. You can now download or push to GitHub.");
+  if(btn) toggleButton(btn,false);
 }
 
 /* =========================================================
@@ -289,25 +240,20 @@ function downloadFile(filename, text) {
   URL.revokeObjectURL(a.href);
 }
 
-function downloadAllUpdatedFiles() {
-  if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
-    alert("No updated files to download.");
-    return;
-  }
-  modifiedHTML.forEach((html, file) => {
-    downloadFile(file, html);
-  });
-  alert("✅ All updated files downloaded successfully.");
+function downloadAllUpdatedFiles(btn){
+  if(btn) toggleButton(btn,true,"Downloading...");
+  if (!modifiedHTML || !(modifiedHTML instanceof Map)) { alert("No updated files."); if(btn) toggleButton(btn,false); return; }
+  modifiedHTML.forEach((html, file)=>downloadFile(file, html));
+  alert("✅ All files downloaded successfully.");
+  if(btn) toggleButton(btn,false);
 }
 
 /* =========================================================
    PUSH TO GITHUB
 ========================================================= */
-async function saveAndPushChanges() {
-  if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
-    alert('No modified files detected.');
-    return;
-  }
+async function saveAndPushChanges(btn){
+  if(btn) toggleButton(btn,true,"Pushing...");
+  if (!modifiedHTML || !(modifiedHTML instanceof Map)) { alert("No modified files."); if(btn) toggleButton(btn,false); return; }
 
   const OWNER = localStorage.getItem('owner');
   const REPO = localStorage.getItem('repo_name');
@@ -320,34 +266,32 @@ async function saveAndPushChanges() {
   };
 
   for(const [filePath, html] of modifiedHTML.entries()){
-    try {
+    try{
       const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filePath}`;
       const fileData = await fetch(getUrl, { headers }).then(r=>r.json());
       if(!fileData.sha) throw new Error("SHA not found for "+filePath);
 
-      const payload = {
-        message: `Update ${filePath} via browser editor`,
-        content: btoa(unescape(encodeURIComponent(html))),
-        branch: BRANCH,
-        sha: fileData.sha
+      const payload = { message:`Update ${filePath} via browser editor`,
+        content:btoa(unescape(encodeURIComponent(html))),
+        branch:BRANCH, sha:fileData.sha
       };
 
-      const response = await fetch(getUrl, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify(payload)
-      });
-
-      if(response.ok){
-        console.log(`✅ ${filePath} pushed to GitHub`);
-      } else {
-        console.error(`❌ Failed to push ${filePath}`, await response.json());
-      }
-    } catch(err){
-      console.error("GitHub push error:", err);
-    }
+      const response = await fetch(getUrl,{ method:"PUT", headers, body:JSON.stringify(payload) });
+      if(response.ok){ console.log(`✅ ${filePath} pushed`); }
+      else{ console.error(`❌ Failed ${filePath}`, await response.json()); }
+    } catch(err){ console.error("GitHub push error:", err); }
   }
   alert("✅ All modified files pushed to GitHub.");
+  if(btn) toggleButton(btn,false);
+}
+
+/* =========================================================
+   BUTTON STATE HELPER
+========================================================= */
+function toggleButton(btn,disabled,text){
+  if(!btn) return;
+  btn.disabled = disabled;
+  if(text) btn.textContent = text;
 }
 
 /* =========================================================
@@ -359,20 +303,18 @@ window.updateOriginalHTMLWithTextChanges=updateOriginalHTMLWithTextChanges;
 window.downloadAllUpdatedFiles=downloadAllUpdatedFiles;
 
 document.addEventListener('DOMContentLoaded', function () {
-  if (localStorage.getItem("featureEnabled")==="load buttons") createButtons();
+  if(localStorage.getItem("featureEnabled")==="load buttons") createButtons();
 });
 
 function createButtons(){
   const buttonContainer=document.createElement('div');
   buttonContainer.id='buttonContainer';
-  Object.assign(buttonContainer.style,{
-    display:'flex', justifyContent:'center', alignItems:'center', flexWrap:'wrap', gap:'15px', marginTop:'20px', marginBottom:'30px'
-  });
+  Object.assign(buttonContainer.style,{display:'flex', justifyContent:'center', alignItems:'center', flexWrap:'wrap', gap:'15px', marginTop:'20px', marginBottom:'30px'});
 
-  const enableEditingBtn = createButton('Enable Text Editing','enableEditingBtn',enableTextEditing);
-  const updateHTMLBtn = createButton('Update HTML with Changes','updateHTMLBtn',updateOriginalHTMLWithTextChanges);
-  const downloadBtn = createButton('Download Updated Files','downloadBtn',downloadAllUpdatedFiles);
-  const saveChangesBtn = createButton('Save and Push Changes','saveChangesBtn',saveAndPushChanges);
+  const enableEditingBtn = createButton('Enable Text Editing','enableEditingBtn',()=>enableTextEditing());
+  const updateHTMLBtn    = createButton('Update HTML with Changes','updateHTMLBtn',()=>updateOriginalHTMLWithTextChanges(updateHTMLBtn));
+  const downloadBtn      = createButton('Download Updated Files','downloadBtn',()=>downloadAllUpdatedFiles(downloadBtn));
+  const saveChangesBtn   = createButton('Save and Push Changes','saveChangesBtn',()=>saveAndPushChanges(saveChangesBtn));
 
   [enableEditingBtn,updateHTMLBtn,downloadBtn,saveChangesBtn].forEach(b=>buttonContainer.appendChild(b));
   document.body.appendChild(buttonContainer);
@@ -380,8 +322,7 @@ function createButtons(){
 
 function createButton(text,id,handler){
   const btn=document.createElement('button');
-  btn.textContent=text; btn.id=id;
-  btn.addEventListener('click',handler);
+  btn.textContent=text; btn.id=id; btn.addEventListener('click',handler);
   Object.assign(btn.style,{
     padding:'12px 24px', fontSize:'16px', cursor:'pointer', border:'1px solid #ccc',
     borderRadius:'4px', backgroundColor:'#4CAF50', color:'white', transition:'background-color 0.3s ease'
