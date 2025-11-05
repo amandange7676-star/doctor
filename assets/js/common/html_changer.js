@@ -14,23 +14,6 @@ const VOLATILE_RE = /(active|current|open|close|show|hide|hidden|visible|slick|s
 const DEBUG = true;
 
 /* =========================================================
-   FIND STABLE ANCHOR SELECTOR
-========================================================= */
-function findStableAnchorSelector(el){
-  let node = el;
-  while(node && node!==document.body){
-    const id = getStableId(node);
-    if (id) return `#${cssEscapeSafe(id)}`;
-    node = node.parentElement;
-  }
-  for(const sel of KNOWN_STABLE_ANCHORS){
-    const a = el.closest(sel);
-    if(a) return sel;
-  }
-  return "body";
-}
-
-/* =========================================================
    HELPERS
 ========================================================= */
 function cleanText(t){ return (t||"").replace(/\s+/g," ").trim(); }
@@ -68,6 +51,7 @@ function levenshtein(a="",b=""){
   }
   return dp[m][n];
 }
+
 function similarity(a,b){
   if(!a||!b) return 0;
   const A=String(a),B=String(b);
@@ -108,9 +92,20 @@ function nthPath(fromEl, root){
   return parts.reverse().join(" > ");
 }
 
-/* =========================================================
-   NEW: Detect dynamic include source (header/footer)
-========================================================= */
+function findStableAnchorSelector(el){
+  let node = el;
+  while(node && node!==document.body){
+    const id = getStableId(node);
+    if (id) return `#${cssEscapeSafe(id)}`;
+    node = node.parentElement;
+  }
+  for(const sel of KNOWN_STABLE_ANCHORS){
+    const a = el.closest(sel);
+    if(a) return sel;
+  }
+  return "body";
+}
+
 function getDynamicSourceFile(el){
   let node=el;
   while(node && node!==document.body){
@@ -127,7 +122,7 @@ function getDynamicSourceFile(el){
 ========================================================= */
 let originalHTML=null;
 let modifiedHTML=null;
-const includeCache = new Map(); // header/footer content cache
+const includeCache = new Map();
 
 fetch(window.location.href,{cache:"no-store"})
  .then(r=>r.text())
@@ -140,10 +135,20 @@ fetch(window.location.href,{cache:"no-store"})
 /* =========================================================
    EDIT MODE + CHANGE CAPTURE
 ========================================================= */
-let MO=null;
-const changeLog=[];
-const latestByKey=new Map();
+let changeLog=[]; 
+let latestByKey=new Map();
 const ELEMENT_ORIG = new WeakMap();
+const ELEMENT_LATEST = new WeakMap();
+const ELEMENT_UID = new WeakMap();
+let ELEMENT_UID_COUNTER = 1;
+const pendingTimers = new WeakMap();
+
+function getElementUid(el){
+  if(ELEMENT_UID.has(el)) return ELEMENT_UID.get(el);
+  const uid='el_'+(ELEMENT_UID_COUNTER++);
+  ELEMENT_UID.set(el, uid);
+  return uid;
+}
 
 function resolveEditableElementFromTextNode(node){
   let el=node.parentElement;
@@ -154,111 +159,75 @@ function resolveEditableElementFromTextNode(node){
   return null;
 }
 
-/* ----------------------------
-   Debounce & per-element helpers
-   ---------------------------- */
-const pendingTimers = new WeakMap();   // element -> timer id
-const ELEMENT_LATEST = new WeakMap();  // element -> last committed text
-const ELEMENT_UID = new WeakMap();     // element -> unique id string
-let ELEMENT_UID_COUNTER = 1;
-
-function getElementUid(el){
-  if(ELEMENT_UID.has(el)) return ELEMENT_UID.get(el);
-  const uid = 'el_' + (ELEMENT_UID_COUNTER++);
-  ELEMENT_UID.set(el, uid);
-  return uid;
-}
-
-/* =========================================================
-   enableTextEditing (small augment: set ELEMENT_LATEST initial)
-   (Replace or augment your existing enableTextEditing)
-========================================================= */
 function enableTextEditing(){
   const sel = Array.from(ALLOWED).map(t=>t.toLowerCase()).join(",");
   document.querySelectorAll(sel).forEach(el=>{
     const t=cleanText(el.textContent);
     if(t && !ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
-    // set initial latest (used to compute oldText during edits)
     if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el, ELEMENT_ORIG.get(el) || "");
     el.contentEditable="true";
     el.style.outline="1px dashed #0088ff";
+
+    // Add input listener to capture typing, paste, delete all
+    el.addEventListener("input",()=>scheduleChange(el));
   });
-  if(!MO){
-    MO=new MutationObserver(onMutations);
-    MO.observe(document.body,{characterData:true,characterDataOldValue:true,subtree:true});
+  if(!window.MO){
+    window.MO=new MutationObserver(records=>{
+      records.forEach(r=>{
+        if(r.type==="characterData"){
+          const el=resolveEditableElementFromTextNode(r.target);
+          if(el) scheduleChange(el);
+        }
+      });
+    });
+    window.MO.observe(document.body,{characterData:true,characterDataOldValue:true,subtree:true});
   }
-  alert("Editing enabled. Start typing to edit text.");
+  alert("Editing enabled. Start typing or pasting to edit text.");
+}
+
+function scheduleChange(el){
+  const prevTimer = pendingTimers.get(el);
+  if(prevTimer) clearTimeout(prevTimer);
+  const timer = setTimeout(()=>recordChange(el),300);
+  pendingTimers.set(el, timer);
+}
+
+function recordChange(el){
+  const newText = cleanText(el.textContent || "");
+  const oldText = ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
+  if(newText===oldText) { pendingTimers.delete(el); return; }
+
+  const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
+  const anchorSel = findStableAnchorSelector(el);
+  const classSig  = getStableClasses(el);
+  const id        = getStableId(el);
+  const root      = document.querySelector(anchorSel) || document.body;
+  const ancSig    = ancestorSignature(el, root);
+  const nth       = nthPath(el, root);
+  const tag       = el.tagName;
+  const key       = getElementUid(el);
+
+  if(latestByKey.has(key)){
+    const idx = latestByKey.get(key);
+    changeLog[idx].newText = newText;
+    changeLog[idx].ts = Date.now();
+  } else {
+    const entry = {
+      uid: key,
+      sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
+      ts: Date.now()
+    };
+    latestByKey.set(key, changeLog.push(entry)-1);
+  }
+
+  ELEMENT_LATEST.set(el,newText);
+  pendingTimers.delete(el);
+
+  DEBUG && console.log("✏️ Coalesced change recorded:", changeLog[changeLog.length-1]);
 }
 
 /* =========================================================
-   NEW onMutations: coalesce per-element edits (debounce)
-   ======================================================== */
-function onMutations(records){
-  for(const rec of records){
-    if(rec.type !== "characterData") continue;
-    const textNode = rec.target;
-    const el = resolveEditableElementFromTextNode(textNode);
-    if(!el) continue;
-
-    // cancel previous timer for this element (if any)
-    const prevTimer = pendingTimers.get(el);
-    if(prevTimer) clearTimeout(prevTimer);
-
-    // schedule coalescing handler
-    const timer = setTimeout(() => {
-      // full current text of element (coalesced)
-      const newText = cleanText(el.textContent || "");
-      // determine old text (either last committed or original)
-      const oldText = ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
-
-      // if nothing changed or empty, nothing to do
-      if(!newText || newText === oldText){
-        pendingTimers.delete(el);
-        return;
-      }
-
-      // gather metadata as before
-      const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
-      const anchorSel = findStableAnchorSelector(el);
-      const classSig  = getStableClasses(el);
-      const id        = getStableId(el);
-      const root      = document.querySelector(anchorSel) || document.body;
-      const ancSig    = ancestorSignature(el, root);
-      const nth       = nthPath(el, root);
-      const tag       = el.tagName;
-
-      // unique per-element key (so subsequent edits update same entry)
-      const key = getElementUid(el);
-
-      if(latestByKey.has(key)){
-        const idx = latestByKey.get(key);
-        changeLog[idx].newText = newText;
-        changeLog[idx].ts = Date.now();
-      } else {
-        const entry = {
-          uid: key,
-          sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
-          ts: Date.now()
-        };
-        latestByKey.set(key, changeLog.push(entry)-1);
-      }
-
-      // mark this as latest committed — so next edit knows the correct "oldText"
-      ELEMENT_LATEST.set(el, newText);
-
-      if(DEBUG){
-        console.log("✏️ Coalesced change recorded:", changeLog[changeLog.length-1]);
-      }
-
-      pendingTimers.delete(el);
-    }, 300); // 300ms debounce; adjust (150-500ms) as you prefer
-
-    pendingTimers.set(el, timer);
-  }
-}
-
-/* =========================================================
-   APPLY TEXT UPDATE TO DOCUMENT
+   APPLY TEXT UPDATE
 ========================================================= */
 function applyTextUpdate(target,newText){
   const tn=Array.from(target.childNodes).find(n=>n.nodeType===Node.TEXT_NODE);
@@ -267,7 +236,7 @@ function applyTextUpdate(target,newText){
 }
 
 /* =========================================================
-   APPLY CHANGES BACK TO FILES
+   UPDATE ORIGINAL FILES
 ========================================================= */
 async function updateOriginalHTMLWithTextChanges(){
   if(!changeLog.length){ alert("No text changes detected."); return; }
@@ -279,7 +248,7 @@ async function updateOriginalHTMLWithTextChanges(){
   }
 
   for(const [file, changes] of filesToUpdate.entries()){
-    DEBUG&&console.log("Processing file:", file);
+    DEBUG && console.log("Processing file:", file);
     let htmlText = includeCache.has(file) 
       ? includeCache.get(file) 
       : await fetch(file).then(r=>r.text()).catch(()=>originalHTML);
@@ -301,7 +270,7 @@ async function updateOriginalHTMLWithTextChanges(){
 
     const newHTML = "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
     includeCache.set(file,newHTML);
-    DEBUG&&console.log(`Updated ${updated} items in ${file}`);
+    DEBUG && console.log(`Updated ${updated} items in ${file}`);
   }
 
   modifiedHTML = includeCache;
@@ -309,7 +278,7 @@ async function updateOriginalHTMLWithTextChanges(){
 }
 
 /* =========================================================
-   DOWNLOAD MODIFIED FILES LOCALLY
+   DOWNLOAD FILES
 ========================================================= */
 function downloadFile(filename, text) {
   const blob = new Blob([text], {type: "text/html"});
@@ -332,7 +301,7 @@ function downloadAllUpdatedFiles() {
 }
 
 /* =========================================================
-   SAVE CHANGES TO GITHUB 
+   PUSH TO GITHUB
 ========================================================= */
 async function saveAndPushChanges() {
   if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
@@ -390,24 +359,14 @@ window.updateOriginalHTMLWithTextChanges=updateOriginalHTMLWithTextChanges;
 window.downloadAllUpdatedFiles=downloadAllUpdatedFiles;
 
 document.addEventListener('DOMContentLoaded', function () {
-  const feature = localStorage.getItem("featureEnabled");
-  console.log('feature enabled:',feature)
-  if (feature === "load buttons") {
-    createButtons();
-  }
+  if (localStorage.getItem("featureEnabled")==="load buttons") createButtons();
 });
 
-function createButtons() {
-  const buttonContainer = document.createElement('div');
-  buttonContainer.id = 'buttonContainer';
+function createButtons(){
+  const buttonContainer=document.createElement('div');
+  buttonContainer.id='buttonContainer';
   Object.assign(buttonContainer.style,{
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center',
-    flexWrap:'wrap',
-    gap:'15px',
-    marginTop:'20px',
-    marginBottom:'30px'
+    display:'flex', justifyContent:'center', alignItems:'center', flexWrap:'wrap', gap:'15px', marginTop:'20px', marginBottom:'30px'
   });
 
   const enableEditingBtn = createButton('Enable Text Editing','enableEditingBtn',enableTextEditing);
@@ -415,26 +374,19 @@ function createButtons() {
   const downloadBtn = createButton('Download Updated Files','downloadBtn',downloadAllUpdatedFiles);
   const saveChangesBtn = createButton('Save and Push Changes','saveChangesBtn',saveAndPushChanges);
 
-  [enableEditingBtn,updateHTMLBtn,downloadBtn,saveChangesBtn].forEach(btn=>buttonContainer.appendChild(btn));
+  [enableEditingBtn,updateHTMLBtn,downloadBtn,saveChangesBtn].forEach(b=>buttonContainer.appendChild(b));
   document.body.appendChild(buttonContainer);
 }
 
-function createButton(text,id,clickHandler){
-  const button=document.createElement('button');
-  button.textContent=text;
-  button.id=id;
-  button.addEventListener('click',clickHandler);
-  Object.assign(button.style,{
-    padding:'12px 24px',
-    fontSize:'16px',
-    cursor:'pointer',
-    border:'1px solid #ccc',
-    borderRadius:'4px',
-    backgroundColor:'#4CAF50',
-    color:'white',
-    transition:'background-color 0.3s ease'
+function createButton(text,id,handler){
+  const btn=document.createElement('button');
+  btn.textContent=text; btn.id=id;
+  btn.addEventListener('click',handler);
+  Object.assign(btn.style,{
+    padding:'12px 24px', fontSize:'16px', cursor:'pointer', border:'1px solid #ccc',
+    borderRadius:'4px', backgroundColor:'#4CAF50', color:'white', transition:'background-color 0.3s ease'
   });
-  button.addEventListener('mouseover',()=>button.style.backgroundColor='#45a049');
-  button.addEventListener('mouseout',()=>button.style.backgroundColor='#4CAF50');
-  return button;
+  btn.addEventListener('mouseover',()=>btn.style.backgroundColor='#45a049');
+  btn.addEventListener('mouseout',()=>btn.style.backgroundColor='#4CAF50');
+  return btn;
 }
