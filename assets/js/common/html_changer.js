@@ -154,11 +154,32 @@ function resolveEditableElementFromTextNode(node){
   return null;
 }
 
+/* ----------------------------
+   Debounce & per-element helpers
+   ---------------------------- */
+const pendingTimers = new WeakMap();   // element -> timer id
+const ELEMENT_LATEST = new WeakMap();  // element -> last committed text
+const ELEMENT_UID = new WeakMap();     // element -> unique id string
+let ELEMENT_UID_COUNTER = 1;
+
+function getElementUid(el){
+  if(ELEMENT_UID.has(el)) return ELEMENT_UID.get(el);
+  const uid = 'el_' + (ELEMENT_UID_COUNTER++);
+  ELEMENT_UID.set(el, uid);
+  return uid;
+}
+
+/* =========================================================
+   enableTextEditing (small augment: set ELEMENT_LATEST initial)
+   (Replace or augment your existing enableTextEditing)
+========================================================= */
 function enableTextEditing(){
   const sel = Array.from(ALLOWED).map(t=>t.toLowerCase()).join(",");
   document.querySelectorAll(sel).forEach(el=>{
     const t=cleanText(el.textContent);
     if(t && !ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
+    // set initial latest (used to compute oldText during edits)
+    if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el, ELEMENT_ORIG.get(el) || "");
     el.contentEditable="true";
     el.style.outline="1px dashed #0088ff";
   });
@@ -169,39 +190,70 @@ function enableTextEditing(){
   alert("Editing enabled. Start typing to edit text.");
 }
 
+/* =========================================================
+   NEW onMutations: coalesce per-element edits (debounce)
+   ======================================================== */
 function onMutations(records){
   for(const rec of records){
-    if(rec.type!=="characterData") continue;
-    const node=rec.target;
-    const el=resolveEditableElementFromTextNode(node);
+    if(rec.type !== "characterData") continue;
+    const textNode = rec.target;
+    const el = resolveEditableElementFromTextNode(textNode);
     if(!el) continue;
 
-    const newText=cleanText(node.nodeValue);
-    const oldText=cleanText(rec.oldValue || ELEMENT_ORIG.get(el) || "");
-    if(!newText || !oldText || newText===oldText) continue;
+    // cancel previous timer for this element (if any)
+    const prevTimer = pendingTimers.get(el);
+    if(prevTimer) clearTimeout(prevTimer);
 
-    const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
-    const anchorSel = findStableAnchorSelector(el);
-    const classSig  = getStableClasses(el);
-    const id        = getStableId(el);
-    const root      = document.querySelector(anchorSel) || document.body;
-    const ancSig    = ancestorSignature(el, root);
-    const nth       = nthPath(el, root);
-    const tag       = el.tagName;
+    // schedule coalescing handler
+    const timer = setTimeout(() => {
+      // full current text of element (coalesced)
+      const newText = cleanText(el.textContent || "");
+      // determine old text (either last committed or original)
+      const oldText = ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
 
-    const key = `${sourceFile}|${anchorSel}|${tag}|${oldText}`;
-    if(latestByKey.has(key)){
-      const idx = latestByKey.get(key);
-      changeLog[idx].newText = newText;
-      changeLog[idx].ts = Date.now();
-    }else{
-      const entry = {
-        sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
-        ts: Date.now()
-      };
-      latestByKey.set(key, changeLog.push(entry)-1);
-    }
-    DEBUG&&console.log("✏️ Change captured:", changeLog[changeLog.length-1]);
+      // if nothing changed or empty, nothing to do
+      if(!newText || newText === oldText){
+        pendingTimers.delete(el);
+        return;
+      }
+
+      // gather metadata as before
+      const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
+      const anchorSel = findStableAnchorSelector(el);
+      const classSig  = getStableClasses(el);
+      const id        = getStableId(el);
+      const root      = document.querySelector(anchorSel) || document.body;
+      const ancSig    = ancestorSignature(el, root);
+      const nth       = nthPath(el, root);
+      const tag       = el.tagName;
+
+      // unique per-element key (so subsequent edits update same entry)
+      const key = getElementUid(el);
+
+      if(latestByKey.has(key)){
+        const idx = latestByKey.get(key);
+        changeLog[idx].newText = newText;
+        changeLog[idx].ts = Date.now();
+      } else {
+        const entry = {
+          uid: key,
+          sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
+          ts: Date.now()
+        };
+        latestByKey.set(key, changeLog.push(entry)-1);
+      }
+
+      // mark this as latest committed — so next edit knows the correct "oldText"
+      ELEMENT_LATEST.set(el, newText);
+
+      if(DEBUG){
+        console.log("✏️ Coalesced change recorded:", changeLog[changeLog.length-1]);
+      }
+
+      pendingTimers.delete(el);
+    }, 300); // 300ms debounce; adjust (150-500ms) as you prefer
+
+    pendingTimers.set(el, timer);
   }
 }
 
