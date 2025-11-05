@@ -41,6 +41,22 @@ function cssEscapeSafe(ident=""){
 function getStableId(el){
   return (el.id && !VOLATILE_RE.test(el.id)) ? el.id : "";
 }
+/* =========================================================
+   APPLY TEXT UPDATE TO DOCUMENT
+========================================================= */
+function applyTextUpdate(doc, ch) {
+  const el = findElementByAnchorSelector(doc, ch.anchorSel);
+  if (el) {
+    // Only replace if text matches old text (to avoid over-updating)
+    if (ch.oldText && el.textContent.trim() !== ch.oldText.trim()) {
+      console.warn("Skipping update: original text mismatch", ch);
+      return;
+    }
+    el.textContent = ch.newText;
+  } else {
+    console.warn("Could not find element for selector:", ch.anchorSel);
+  }
+}
 
 function getStableClasses(el){
   return Array.from(el.classList||[]).filter(c=>!VOLATILE_RE.test(c));
