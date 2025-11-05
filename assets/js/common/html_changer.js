@@ -151,27 +151,26 @@ function getElementUid(el){
 }
 
 function resolveEditableElementFromTextNode(node){
-  let el = node.parentElement;
+  let el=node.parentElement;
   while(el){
-    if(!["SCRIPT","STYLE"].includes(el.tagName)) return el;
-    el = el.parentElement;
+    if(ALLOWED.has(el.tagName)) return el;
+    el=el.parentElement;
   }
   return null;
 }
 
 function enableTextEditing(){
-  const allEls = Array.from(document.body.querySelectorAll("*"))
-                     .filter(e => !["SCRIPT","STYLE"].includes(e.tagName));
-  
-  allEls.forEach(el=>{
-    const t=el.innerHTML.trim();
-    if(!ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
+  const sel = Array.from(ALLOWED).map(t=>t.toLowerCase()).join(",");
+  document.querySelectorAll(sel).forEach(el=>{
+    const t=cleanText(el.textContent);
+    if(t && !ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
     if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el, ELEMENT_ORIG.get(el) || "");
     el.contentEditable="true";
     el.style.outline="1px dashed #0088ff";
+
+    // Add input listener to capture typing, paste, delete all
     el.addEventListener("input",()=>scheduleChange(el));
   });
-
   if(!window.MO){
     window.MO=new MutationObserver(records=>{
       records.forEach(r=>{
@@ -183,9 +182,8 @@ function enableTextEditing(){
     });
     window.MO.observe(document.body,{characterData:true,characterDataOldValue:true,subtree:true});
   }
-  alert("Editing enabled. You can now edit any visible element.");
+  alert("Editing enabled. Start typing or pasting to edit text.");
 }
-
 
 function scheduleChange(el){
   const prevTimer = pendingTimers.get(el);
