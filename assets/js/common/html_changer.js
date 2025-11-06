@@ -1,12 +1,6 @@
 /* =========================================================
    CONFIG
 ========================================================= */
-const ALLOWED = new Set([
-  "H1","H2","H3","H4","H5","H6",
-  "P","DIV","SPAN","A",
-  "UL","LI","LABEL","B"
-]);
-
 const KNOWN_STABLE_ANCHORS = [
   "#page-content",".pageWrapper","#main","main","#content","#root"
 ];
@@ -16,7 +10,13 @@ const DEBUG = true;
 /* =========================================================
    HELPERS
 ========================================================= */
-function cleanText(t){ return (t||"").replace(/\s+/g," ").trim(); }
+function cleanText(t){
+  if(!t) return "";
+  return t
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 function cssEscapeSafe(ident=""){
   if (window.CSS && CSS.escape) return CSS.escape(ident);
@@ -39,25 +39,6 @@ function jaccard(aArr,bArr){
   return inter/(A.size+B.size-inter);
 }
 
-function levenshtein(a="",b=""){
-  const m=a.length,n=b.length;
-  const dp=Array.from({length:m+1},()=>Array(n+1).fill(0));
-  for(let i=0;i<=m;i++) dp[i][0]=i;
-  for(let j=0;j<=n;j++) dp[0][j]=j;
-  for(let i=1;i<=m;i++){
-    for(let j=1;j<=n;j++){
-      dp[i][j]=(a[i-1]===b[j-1])?dp[i-1][j-1]:Math.min(dp[i-1][j-1]+1,dp[i][j-1]+1,dp[i-1][j]+1);
-    }
-  }
-  return dp[m][n];
-}
-
-function similarity(a,b){
-  if(!a||!b) return 0;
-  const A=String(a),B=String(b);
-  return 1 - (levenshtein(A,B) / Math.max(A.length,B.length));
-}
-
 function ancestorSignature(el, root){
   const sig=[]; let node=el.parentElement; let guard=0;
   while(node && node!==root && node.tagName && node.tagName!=="HTML" && guard++<8){
@@ -65,18 +46,6 @@ function ancestorSignature(el, root){
     node=node.parentElement;
   }
   return sig;
-}
-
-function ancestorOverlapScore(a,b){
-  const len=Math.min(a.length,b.length);
-  if(!len) return 0;
-  let total=0;
-  for(let i=0;i<len;i++){
-    const idScore = (a[i].id && b[i].id) ? (a[i].id===b[i].id?1:0) : 0;
-    const clsScore=jaccard(a[i].classes,b[i].classes);
-    total += Math.max(idScore, clsScore);
-  }
-  return total/len;
 }
 
 function nthPath(fromEl, root){
@@ -114,7 +83,7 @@ function getDynamicSourceFile(el){
     }
     node=node.parentElement;
   }
-  return null;
+  return window.location.pathname.split('/').pop() || "index.html";
 }
 
 /* =========================================================
@@ -152,87 +121,88 @@ function getElementUid(el){
 
 function resolveEditableElementFromTextNode(node){
   let el=node.parentElement;
-  while(el){
-    if(ALLOWED.has(el.tagName)) return el;
+  while(el && el!==document.body){
+    if(el.isContentEditable) return el;
     el=el.parentElement;
   }
   return null;
 }
 
 function enableTextEditing(){
-  const sel = Array.from(ALLOWED).map(t=>t.toLowerCase()).join(",");
+  const sel='*:not(script):not(style):not(noscript):not(head):not(title):not(meta):not(link)';
   document.querySelectorAll(sel).forEach(el=>{
-    const t=cleanText(el.textContent);
-    if(t && !ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
-    if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el, ELEMENT_ORIG.get(el) || "");
+    const t = cleanText(el.innerHTML);
+    if(!t) return;
+    if(!ELEMENT_ORIG.has(el)) ELEMENT_ORIG.set(el,t);
+    if(!ELEMENT_LATEST.has(el)) ELEMENT_LATEST.set(el,t);
+
     el.contentEditable="true";
     el.style.outline="1px dashed #0088ff";
+    el.style.minHeight="1em";
+    el.style.cursor="text";
 
-    // Add input listener to capture typing, paste, delete all
     el.addEventListener("input",()=>scheduleChange(el));
   });
+
   if(!window.MO){
     window.MO=new MutationObserver(records=>{
-      records.forEach(r=>{
+      for(const r of records){
         if(r.type==="characterData"){
           const el=resolveEditableElementFromTextNode(r.target);
           if(el) scheduleChange(el);
         }
-      });
+      }
     });
-    window.MO.observe(document.body,{characterData:true,characterDataOldValue:true,subtree:true});
+    window.MO.observe(document.body,{characterData:true,subtree:true});
   }
-  alert("Editing enabled. Start typing or pasting to edit text.");
+
+  alert("✅ Editing enabled for all visible text elements.");
 }
 
 function scheduleChange(el){
-  const prevTimer = pendingTimers.get(el);
+  const prevTimer=pendingTimers.get(el);
   if(prevTimer) clearTimeout(prevTimer);
-  const timer = setTimeout(()=>recordChange(el),300);
-  pendingTimers.set(el, timer);
+  const timer=setTimeout(()=>recordChange(el),300);
+  pendingTimers.set(el,timer);
 }
 
 function recordChange(el){
-  const newText = cleanText(el.textContent || "");
-  const oldText = ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
-  if(newText===oldText) { pendingTimers.delete(el); return; }
+  const newText=cleanText(el.innerHTML.replace(/<br\s*\/?>/gi,"\n"));
+  const oldText=ELEMENT_LATEST.get(el) || ELEMENT_ORIG.get(el) || "";
+  if(newText===oldText){ pendingTimers.delete(el); return; }
 
-  const sourceFile = getDynamicSourceFile(el) || window.location.pathname.split('/').pop();
-  const anchorSel = findStableAnchorSelector(el);
-  const classSig  = getStableClasses(el);
-  const id        = getStableId(el);
-  const root      = document.querySelector(anchorSel) || document.body;
-  const ancSig    = ancestorSignature(el, root);
-  const nth       = nthPath(el, root);
-  const tag       = el.tagName;
-  const key       = getElementUid(el);
+  const sourceFile=getDynamicSourceFile(el);
+  const anchorSel=findStableAnchorSelector(el);
+  const classSig=getStableClasses(el);
+  const id=getStableId(el);
+  const root=document.querySelector(anchorSel) || document.body;
+  const ancSig=ancestorSignature(el,root);
+  const nth=nthPath(el,root);
+  const tag=el.tagName;
+  const key=getElementUid(el);
 
   if(latestByKey.has(key)){
-    const idx = latestByKey.get(key);
-    changeLog[idx].newText = newText;
-    changeLog[idx].ts = Date.now();
+    const idx=latestByKey.get(key);
+    changeLog[idx].newText=newText;
+    changeLog[idx].ts=Date.now();
   } else {
-    const entry = {
-      uid: key,
-      sourceFile, anchorSel, tag, oldText, newText, classSig, id, ancSig, nth,
-      ts: Date.now()
+    const entry={
+      uid:key,sourceFile,anchorSel,tag,oldText,newText,classSig,id,ancSig,nth,ts:Date.now()
     };
-    latestByKey.set(key, changeLog.push(entry)-1);
+    latestByKey.set(key,changeLog.push(entry)-1);
   }
 
   ELEMENT_LATEST.set(el,newText);
   pendingTimers.delete(el);
 
-  DEBUG && console.log("✏️ Coalesced change recorded:", changeLog[changeLog.length-1]);
+  DEBUG&&console.log("✏️ Change recorded:", changeLog[changeLog.length-1]);
 }
 
 /* =========================================================
    APPLY TEXT UPDATE
 ========================================================= */
 function applyTextUpdate(target,newText){
-  const tn=Array.from(target.childNodes).find(n=>n.nodeType===Node.TEXT_NODE);
-  if(tn) tn.nodeValue=newText;
-  else target.textContent=newText;
+  target.innerHTML = newText.replace(/\n/g,"<br>");
 }
 
 /* =========================================================
@@ -247,10 +217,10 @@ async function updateOriginalHTMLWithTextChanges(){
     filesToUpdate.get(ch.sourceFile).push(ch);
   }
 
-  for(const [file, changes] of filesToUpdate.entries()){
+  for(const [file,changes] of filesToUpdate.entries()){
     DEBUG && console.log("Processing file:", file);
     let htmlText = includeCache.has(file) 
-      ? includeCache.get(file) 
+      ? includeCache.get(file)
       : await fetch(file).then(r=>r.text()).catch(()=>originalHTML);
 
     const parser = new DOMParser();
@@ -259,43 +229,57 @@ async function updateOriginalHTMLWithTextChanges(){
 
     let updated=0;
     for(const ch of changes){
-      const { tag, oldText, newText } = ch;
-      const cands = Array.from(root.getElementsByTagName(tag)).filter(e => cleanText(e.textContent)===oldText);
-      const target = cands[0];
+      let target=null;
+
+      if(ch.id) target=root.querySelector(`#${cssEscapeSafe(ch.id)}`);
+      if(!target && ch.classSig && ch.classSig.length){
+        const clsSel = ch.classSig.map(c=>'.'+cssEscapeSafe(c)).join('');
+        const cands = root.querySelectorAll(`${ch.tag}${clsSel}`);
+        target = Array.from(cands).find(e=>cleanText(e.innerHTML)===ch.oldText);
+      }
+      if(!target && ch.nth){
+        const sel=`${ch.anchorSel} ${ch.nth}`;
+        target=root.querySelector(sel);
+      }
+      if(!target){
+        const cands=Array.from(root.getElementsByTagName(ch.tag));
+        target=cands.find(e=>cleanText(e.innerHTML)===ch.oldText);
+      }
+
       if(target){
-        applyTextUpdate(target,newText);
+        applyTextUpdate(target,ch.newText);
         updated++;
       }
     }
 
-    const newHTML = "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
+    const newHTML="<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
     includeCache.set(file,newHTML);
-    DEBUG && console.log(`Updated ${updated} items in ${file}`);
+    DEBUG && console.log(`✅ Updated ${updated} items in ${file}`);
   }
 
-  modifiedHTML = includeCache;
+  modifiedHTML=includeCache;
   alert("✅ All changes applied locally. You can now download or push to GitHub.");
 }
 
 /* =========================================================
    DOWNLOAD FILES
 ========================================================= */
-function downloadFile(filename, text) {
-  const blob = new Blob([text], {type: "text/html"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
+function downloadFile(filename,text){
+  const blob=new Blob([text],{type:"text/html"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
   a.click();
   URL.revokeObjectURL(a.href);
 }
 
-function downloadAllUpdatedFiles() {
-  if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
+function downloadAllUpdatedFiles(){
+  if(!modifiedHTML || !(modifiedHTML instanceof Map)){
     alert("No updated files to download.");
     return;
   }
-  modifiedHTML.forEach((html, file) => {
-    downloadFile(file, html);
+  modifiedHTML.forEach((html,file)=>{
+    downloadFile(file,html);
   });
   alert("✅ All updated files downloaded successfully.");
 }
@@ -303,39 +287,37 @@ function downloadAllUpdatedFiles() {
 /* =========================================================
    PUSH TO GITHUB
 ========================================================= */
-async function saveAndPushChanges() {
-  if (!modifiedHTML || !(modifiedHTML instanceof Map)) {
-    alert('No modified files detected.');
+async function saveAndPushChanges(){
+  if(!modifiedHTML || !(modifiedHTML instanceof Map)){
+    alert("No modified files detected.");
     return;
   }
 
-  const OWNER = localStorage.getItem('owner');
-  const REPO = localStorage.getItem('repo_name');
-  const BRANCH = "main";
-  const token = localStorage.getItem('feature_key');
-  const headers = {
-    "Authorization": `token ${token}`,
-    "Accept": "application/vnd.github.v3+json",
-    "Content-Type": "application/json"
+  const OWNER=localStorage.getItem('owner');
+  const REPO=localStorage.getItem('repo_name');
+  const BRANCH="main";
+  const token=localStorage.getItem('feature_key');
+  const headers={
+    "Authorization":`token ${token}`,
+    "Accept":"application/vnd.github.v3+json",
+    "Content-Type":"application/json"
   };
 
-  for(const [filePath, html] of modifiedHTML.entries()){
-    try {
-      const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filePath}`;
-      const fileData = await fetch(getUrl, { headers }).then(r=>r.json());
+  for(const [filePath,html] of modifiedHTML.entries()){
+    try{
+      const getUrl=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${filePath}`;
+      const fileData=await fetch(getUrl,{headers}).then(r=>r.json());
       if(!fileData.sha) throw new Error("SHA not found for "+filePath);
 
-      const payload = {
-        message: `Update ${filePath} via browser editor`,
-        content: btoa(unescape(encodeURIComponent(html))),
-        branch: BRANCH,
-        sha: fileData.sha
+      const payload={
+        message:`Update ${filePath} via browser editor`,
+        content:btoa(unescape(encodeURIComponent(html))),
+        branch:BRANCH,
+        sha:fileData.sha
       };
 
-      const response = await fetch(getUrl, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify(payload)
+      const response=await fetch(getUrl,{
+        method:"PUT",headers,body:JSON.stringify(payload)
       });
 
       if(response.ok){
@@ -343,8 +325,8 @@ async function saveAndPushChanges() {
       } else {
         console.error(`❌ Failed to push ${filePath}`, await response.json());
       }
-    } catch(err){
-      console.error("GitHub push error:", err);
+    }catch(err){
+      console.error("GitHub push error:",err);
     }
   }
   alert("✅ All modified files pushed to GitHub.");
@@ -366,13 +348,14 @@ function createButtons(){
   const buttonContainer=document.createElement('div');
   buttonContainer.id='buttonContainer';
   Object.assign(buttonContainer.style,{
-    display:'flex', justifyContent:'center', alignItems:'center', flexWrap:'wrap', gap:'15px', marginTop:'20px', marginBottom:'30px'
+    display:'flex',justifyContent:'center',alignItems:'center',
+    flexWrap:'wrap',gap:'15px',marginTop:'20px',marginBottom:'30px'
   });
 
-  const enableEditingBtn = createButton('Enable Text Editing','enableEditingBtn',enableTextEditing);
-  const updateHTMLBtn = createButton('Update HTML with Changes','updateHTMLBtn',updateOriginalHTMLWithTextChanges);
-  const downloadBtn = createButton('Download Updated Files','downloadBtn',downloadAllUpdatedFiles);
-  const saveChangesBtn = createButton('Save and Push Changes','saveChangesBtn',saveAndPushChanges);
+  const enableEditingBtn=createButton('Enable Text Editing','enableEditingBtn',enableTextEditing);
+  const updateHTMLBtn=createButton('Update HTML with Changes','updateHTMLBtn',updateOriginalHTMLWithTextChanges);
+  const downloadBtn=createButton('Download Updated Files','downloadBtn',downloadAllUpdatedFiles);
+  const saveChangesBtn=createButton('Save and Push Changes','saveChangesBtn',saveAndPushChanges);
 
   [enableEditingBtn,updateHTMLBtn,downloadBtn,saveChangesBtn].forEach(b=>buttonContainer.appendChild(b));
   document.body.appendChild(buttonContainer);
@@ -383,8 +366,10 @@ function createButton(text,id,handler){
   btn.textContent=text; btn.id=id;
   btn.addEventListener('click',handler);
   Object.assign(btn.style,{
-    padding:'12px 24px', fontSize:'16px', cursor:'pointer', border:'1px solid #ccc',
-    borderRadius:'4px', backgroundColor:'#4CAF50', color:'white', transition:'background-color 0.3s ease'
+    padding:'12px 24px',fontSize:'16px',cursor:'pointer',
+    border:'1px solid #ccc',borderRadius:'4px',
+    backgroundColor:'#4CAF50',color:'white',
+    transition:'background-color 0.3s ease'
   });
   btn.addEventListener('mouseover',()=>btn.style.backgroundColor='#45a049');
   btn.addEventListener('mouseout',()=>btn.style.backgroundColor='#4CAF50');
